@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Mohamed Beydoun
+Copyright © 2020 Mohamed Beydoun <mohamed.beydoun@mail.mcgill.ca>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

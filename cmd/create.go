@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Mohamed Beydoun
+Copyright © 2020 Mohamed Beydoun <mohamed.beydoun@mail.mcgill.ca>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,7 +18,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"os"
 
+	"github.com/MohamedBeydoun/atlas/pkg/prj"
 	"github.com/spf13/cobra"
 )
 
@@ -35,16 +37,37 @@ express-typescript project.`,
 func init() {
 	rootCmd.AddCommand(createCmd)
 
-	createCmd.Flags().IntP("port", "p", 3000, "Specify port number")
+	createCmd.Flags().StringP("port", "p", "3000", "Specify port number")
 	createCmd.Flags().String("db-url", "mongodb://localhost:27017/PROJECT_NAME", "Specify mongodb url")
 }
+
 func createProject(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return errors.New("Project name not provided")
+		return errors.New("Project name not provided\n")
 	} else if len(args) > 1 {
-		return errors.New("Too many arguments")
+		return errors.New("Too many arguments\n")
 	}
 
-	fmt.Printf("Creating new project: %v\n", args[0])
-	return nil
+	port, err := cmd.Flags().GetString("port")
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	dbURL, err := cmd.Flags().GetString("db-url")
+	if err != nil {
+		return errors.New(err.Error())
+	}
+	wd, err := os.Getwd()
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	project := prj.Project{
+		Name:         args[0],
+		AbsolutePath: fmt.Sprintf("%v/%v", wd, args[0]),
+		Port:         port,
+		DBURL:        dbURL,
+	}
+
+	err = project.Create()
+	return err
 }
