@@ -2,6 +2,7 @@
 
 Run:
 ```
-go install (in project's root directory)
+go mod vendor
+go install #in project's root directory
 eunomia
 ```
