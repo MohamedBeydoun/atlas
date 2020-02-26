@@ -32,7 +32,7 @@ var rootCmd = &cobra.Command{
 	Use:   "atlas",
 	Short: "Atlas is a CLT for generating express code",
 	Long: `Atlas is a command-line tool for generating express code.
-It helps developers skip writing boilerplate code for their expressapplications. 
+It helps developers skip writing boilerplate code for their express applications. 
 Generated code is well-structured and follows the mostrecent conventions.`,
 }
 
