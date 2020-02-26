@@ -1,4 +1,4 @@
-module github.com/MohamedBeydoun/eunomia
+module github.com/MohamedBeydoun/atlas
 
 go 1.13
 

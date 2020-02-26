@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/MohamedBeydoun/eunomia/cmd"
+import "github.com/MohamedBeydoun/atlas/cmd"
 
 func main() {
 	cmd.Execute()

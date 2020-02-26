@@ -29,9 +29,9 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "eunomia",
-	Short: "Eunomia is a CLT for generating express code",
-	Long: `Eunomia is a command-line tool for generating express code.
+	Use:   "atlas",
+	Short: "Atlas is a CLT for generating express code",
+	Long: `Atlas is a command-line tool for generating express code.
 It helps developers skip writing boilerplate code for their expressapplications. 
 Generated code is well-structured and follows the mostrecent conventions.`,
 }
@@ -52,7 +52,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.eunomia.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.atlas.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -72,9 +72,9 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".eunomia" (without extension).
+		// Search config in home directory with name ".atlas" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".eunomia")
+		viper.SetConfigName(".atlas")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
