@@ -6,10 +6,12 @@ import { I{{ .Name | ToTitle }} } from "../../interfaces/I{{ .Name | ToTitle }}"
 
 export interface I{{ .Name | ToTitle }}Model extends I{{ .Name | ToTitle }}, Document {}
 
-const {{ .Name }}Schema: Schema = new Schema({ {{ range $field, $type := .Fields }}
-    {{ $field }}: {
+const {{ .Name }}Schema: Schema = new Schema({ {{ range $field, $type := .Fields }}{{ $isArray:=index $type 0}}
+    {{ $field }}: {{ if eq $isArray 91 }}[{
+        type: {{ $type | TrimEdges | ToTitle }}
+    }],{{else}}{
         type: {{ $type | ToTitle }}
-    },{{ end }}
+    },{{ end }}{{ end }}
 });
 
 const {{ .Name | ToTitle }}: Model<I{{ .Name | ToTitle }}Model> = model<I{{ .Name | ToTitle }}Model>("{{ .Name | ToTitle }}", {{ .Name }}Schema);
@@ -19,8 +21,8 @@ export {{ .Name | ToTitle }};
 }
 
 func InterfaceTemplate() []byte {
-	return []byte(`export interface I{{ .Name | ToTitle }} { {{ range $field, $type := .Fields }}
-    {{ $field }}: {{ $type }},{{ end }}
+	return []byte(`export interface I{{ .Name | ToTitle }} { {{ range $field, $type := .Fields }}{{ $isArray:=index $type 0}}
+    {{ $field }}: {{ if eq $isArray 91 }}{{ $type | TrimEdges | TrimRight }}[]{{ else }}{{ $type }}{{ end }},{{ end }}
 }
 `)
 }

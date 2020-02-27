@@ -36,8 +36,10 @@ func CreateFolders(r Resource, folders []string, path string, permissions os.Fil
 // CreateFile creates a file
 func CreateFile(r Resource, name string, path string, templateString string, level int) error {
 	tplFuncMap := template.FuncMap{
-		"ToUpper": strings.ToUpper,
-		"ToTitle": strings.Title,
+		"ToUpper":   strings.ToUpper,
+		"ToTitle":   strings.Title,
+		"TrimEdges": func(str string) string { return str[1:] },
+		"TrimRight": func(str string) string { return str[:len(str)] },
 	}
 
 	file, err := os.Create(fmt.Sprintf("%s/%s", path, name))
