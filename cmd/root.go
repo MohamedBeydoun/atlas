@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Mohamed Beydoun
+Copyright © 2020 Mohamed Beydoun <mohamed.beydoun@mail.mcgill.ca>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ var rootCmd = &cobra.Command{
 	Use:   "atlas",
 	Short: "Atlas is a CLT for generating express code",
 	Long: `Atlas is a command-line tool for generating express code.
-It helps developers skip writing boilerplate code for their express applications. 
-Generated code is well-structured and follows the mostrecent conventions.`,
+It helps developers skip writing boilerplate code for their express projects. 
+Generated code is well-structured and follows the most recent conventions.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
