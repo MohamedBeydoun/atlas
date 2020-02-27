@@ -1,0 +1,17 @@
+import { Schema, Document, Model, model } from "mongoose";
+import { ITest } from "../../interfaces/ITest";
+
+export interface ITestModel extends ITest, Document {}
+
+const testSchema: Schema = new Schema({ 
+    test: {
+        type: String
+    },
+    test2: [{
+        type: String
+    }],
+});
+
+const Test: Model<ITestModel> = model<ITestModel>("Test", testSchema);
+
+export { Test };
