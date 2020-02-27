@@ -32,24 +32,27 @@ func NewModel(name string, fields map[string]string, path string) (*Model, error
 }
 
 func (m *Model) Create() error {
-	fmt.Printf("Creating %s model under %s\n", m.Name, m.AbsolutePath)
+	fmt.Printf("Creating %s model\n", m.Name)
 
-	fmt.Println("    models/")
-	err := util.CreateFile(m, m.Name+".ts", m.AbsolutePath+"/models", string(tpl.ModelTemplate()), 2)
+	fmt.Printf("    %s/src/database/models/", m.Project.Name)
+	err := util.CreateFile(m, m.Name+".ts", m.AbsolutePath+"/models", string(tpl.ModelTemplate()), 0)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("    interfaces/")
-	err = util.CreateFile(m, "I"+strings.Title(m.Name)+".ts", m.Project.AbsolutePath+"/src/interfaces", string(tpl.InterfaceTemplate()), 2)
+	fmt.Printf("    %s/src/interfaces/", m.Project.Name)
+	err = util.CreateFile(m, "I"+strings.Title(m.Name)+".ts", m.Project.AbsolutePath+"/src/interfaces", string(tpl.InterfaceTemplate()), 0)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("    interactions/")
-	err = util.CreateFile(m, m.Name+".ts", m.AbsolutePath+"/interactions", string(tpl.InteractionsTemplate()), 2)
+	fmt.Printf("    %s/src/database/interactions/", m.Project.Name)
+	err = util.CreateFile(m, m.Name+".ts", m.AbsolutePath+"/interactions", string(tpl.InteractionsTemplate()), 0)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Done")
+
 	return nil
 }
