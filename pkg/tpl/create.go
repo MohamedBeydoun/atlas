@@ -42,12 +42,13 @@ func PackageJSONTemplate() []byte {
         "@types/mongodb": "^3.1.26",
         "@types/mongoose": "^5.5.0",
         "@types/node": "^11.13.10",
+        "@babel/core": "^7.0.0",
         "body-parser": "^1.19.0",
         "cors": "^2.8.5",
         "express": "^4.16.4",
         "mongoose": "^5.5.7",
         "tslint": "^5.16.0",
-        "typescript": "^3.4.5",
+        "typescript": "^3.4.5"
     }
 }
 `)
@@ -172,24 +173,24 @@ export { app };
 // ServerTemplate ...
 func ServerTemplate() []byte {
 	return []byte(`import { app, port } from "./app";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 
-let dbUrl = "";
+// let dbUrl = "";
 
-(process.env.DB_URL)
-    ? dbUrl = process.env.DB_URL
-    : dbUrl = "{{ .DBURL }}";
+// (process.env.DB_URL)
+//     ? dbUrl = process.env.DB_URL
+//     : dbUrl = "{{ .DBURL }}";
 
-mongoose.connect(dbUrl, {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-});
-mongoose.set("useCreateIndex", true);
+// mongoose.connect(dbUrl, {
+//     useNewUrlParser: true,
+//     useFindAndModify: false,
+//     useUnifiedTopology: true,
+//     useCreateIndex: true
+// });
+// mongoose.set("useCreateIndex", true);
 
 const server = app.listen(port, async () => {
-    logger.info("Server listening on port " + port");
+    console.log("Server listening on port " + port);
 });
 
 export { server };
