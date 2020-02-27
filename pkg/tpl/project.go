@@ -173,21 +173,21 @@ export { app };
 // ServerTemplate ...
 func ServerTemplate() []byte {
 	return []byte(`import { app, port } from "./app";
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// let dbUrl = "";
+let dbUrl = "";
 
-// (process.env.DB_URL)
-//     ? dbUrl = process.env.DB_URL
-//     : dbUrl = "{{ .DBURL }}";
+(process.env.DB_URL)
+    ? dbUrl = process.env.DB_URL
+    : dbUrl = "{{ .DBURL }}";
 
-// mongoose.connect(dbUrl, {
-//     useNewUrlParser: true,
-//     useFindAndModify: false,
-//     useUnifiedTopology: true,
-//     useCreateIndex: true
-// });
-// mongoose.set("useCreateIndex", true);
+mongoose.connect(dbUrl, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+});
+mongoose.set("useCreateIndex", true);
 
 const server = app.listen(port, async () => {
     console.log("Server listening on port " + port);
