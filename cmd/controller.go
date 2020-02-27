@@ -23,30 +23,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// modelCmd represents the model command
-var modelCmd = &cobra.Command{
-	Use:   "model [flags] [arg]",
-	Short: "Model generates a mongodb model.",
-	Long: `Model generates a new mongodb model with the given
-fields.`,
-	RunE: generateModel,
+// controllerCmd represents the controller command
+var controllerCmd = &cobra.Command{
+	Use:   "controller [flags] [arg]",
+	Short: "Controller generates an express controller.",
+	Long: `Model generates a new express controller with the given
+name and suggested functions.`,
+	RunE: generateController,
 }
 
 func init() {
-	generateCmd.AddCommand(modelCmd)
-
-	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types")
-	modelCmd.MarkFlagRequired("fields")
+	generateCmd.AddCommand(controllerCmd)
+	controllerCmd.Flags().StringSliceP("functions", "f", []string{}, "Specify functions")
 }
 
-func generateModel(cmd *cobra.Command, args []string) error {
+func generateController(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return errors.New("Model name not provided\n")
+		return errors.New("Controller name not provided\n")
 	} else if len(args) > 1 {
 		return errors.New("Too many arguments\n")
 	}
 
-	fields, err := cmd.Flags().GetStringToString("fields")
+	functions, err := cmd.Flags().GetStringSlice("functions")
 	if err != nil {
 		return errors.New(err.Error())
 	}
@@ -55,11 +53,11 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	model, err := generator.NewModel(args[0], fields, wd+"/src/database")
+	controller, err := generator.NewController(args[0], functions, wd+"/src/controllers")
 	if err != nil {
 		return err
 	}
 
-	err = model.Create()
+	err = controller.Create()
 	return err
 }
