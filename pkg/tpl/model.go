@@ -8,7 +8,7 @@ export interface I{{ .Name | ToTitle }}Model extends I{{ .Name | ToTitle }}, Doc
 
 const {{ .Name }}Schema: Schema = new Schema({ {{ range $field, $type := .Fields }}{{ $isArray:=index $type 0}}
     {{ $field }}: {{ if eq $isArray 91 }}[{
-        type: {{ $type | TrimEdges | ToTitle }}
+        type: {{ $type | TrimEdges | TrimRight | ToTitle }}
     }],{{else}}{
         type: {{ $type | ToTitle }}
     },{{ end }}{{ end }}
@@ -16,13 +16,13 @@ const {{ .Name }}Schema: Schema = new Schema({ {{ range $field, $type := .Fields
 
 const {{ .Name | ToTitle }}: Model<I{{ .Name | ToTitle }}Model> = model<I{{ .Name | ToTitle }}Model>("{{ .Name | ToTitle }}", {{ .Name }}Schema);
 
-export {{ .Name | ToTitle }};
+export { {{ .Name | ToTitle }} };
 `)
 }
 
 func InterfaceTemplate() []byte {
 	return []byte(`export interface I{{ .Name | ToTitle }} { {{ range $field, $type := .Fields }}{{ $isArray:=index $type 0}}
-    {{ $field }}: {{ if eq $isArray 91 }}{{ $type | TrimEdges | TrimRight }}[]{{ else }}{{ $type }}{{ end }},{{ end }}
+    {{ $field }}: {{ if eq $isArray 91 }}{{ $type | TrimEdges | TrimRight }}[]{{ else }}{{ $type }}{{ end }};{{ end }}
 }
 `)
 }
