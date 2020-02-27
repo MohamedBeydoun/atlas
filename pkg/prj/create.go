@@ -71,6 +71,7 @@ func (p *Project) Create() error {
 	return nil
 }
 
+// populateSrc populates the src directory with appropriate files and folders
 func (p *Project) populateSrc() error {
 	srcFolders := []string{"routes", "controllers", "interfaces", "middleware", "util", "database"}
 	err := p.createFolders(srcFolders, p.AbsolutePath+"/src", 0751, true, 2)
@@ -96,6 +97,7 @@ func (p *Project) populateSrc() error {
 	return nil
 }
 
+// populateSrc populates the test directory with appropriate files and folders
 func (p *Project) populateTest() error {
 	testFolders := []string{"routes"}
 	err := p.createFolders(testFolders, p.AbsolutePath+"/test", 0751, true, 2)
@@ -106,6 +108,7 @@ func (p *Project) populateTest() error {
 	return nil
 }
 
+// createFolders creates a list of folders
 func (p *Project) createFolders(folders []string, path string, permissions os.FileMode, withKeep bool, level int) error {
 	for _, folder := range folders {
 		if _, err := os.Stat(fmt.Sprintf("%s/%s", path, folder)); os.IsNotExist(err) {
@@ -113,7 +116,10 @@ func (p *Project) createFolders(folders []string, path string, permissions os.Fi
 				return err
 			}
 			if withKeep {
-				keepFolder(path + "/" + folder)
+				err := keepFolder(path + "/" + folder)
+				if err != nil {
+					return err
+				}
 			}
 
 			for i := 0; i < level; i++ {
@@ -126,6 +132,7 @@ func (p *Project) createFolders(folders []string, path string, permissions os.Fi
 	return nil
 }
 
+// createFile creates a file
 func (p *Project) createFile(name string, path string, templateString string, level int) error {
 	file, err := os.Create(fmt.Sprintf("%s/%s", path, name))
 	if err != nil {
@@ -147,6 +154,7 @@ func (p *Project) createFile(name string, path string, templateString string, le
 	return nil
 }
 
+// keepFolder creates a .keep file in directory to keep the folder
 func keepFolder(path string) error {
 	keepFile, err := os.Create(fmt.Sprintf("%s/.keep", path))
 	if err != nil {
