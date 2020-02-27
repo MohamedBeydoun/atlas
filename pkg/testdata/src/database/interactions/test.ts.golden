@@ -1,0 +1,25 @@
+import { ITest } from "../../interfaces/ITest";
+import { Test, ITestModel } from "../models/test";
+
+export const testDBInteractions = {
+
+    create: (test: ITest): Promise<ITestModel> => {
+        return Test.create(test);
+    },
+
+    all: (): Promise<ITestModel[]> => {
+        return Test.find().exec();
+    },
+
+    find: (testId: string): Promise<ITestModel> => {
+        return Test.findOne({ _id: testId }).exec();
+    },
+
+    update: (testId: string, newTest: ITest): Promise<ITestModel> => {
+        return Test.findByIdAndUpdate(testId, newTest, { new: true }).exec();
+    },
+
+    delete: (testId: string): Promise<ITestModel> => {
+        return Test.findByIdAndDelete(testId).exec();
+    },
+};

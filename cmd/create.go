@@ -28,7 +28,7 @@ import (
 var createCmd = &cobra.Command{
 	Use:   "create [flags] [arg]",
 	Short: "Create creates a new express project.",
-	Long: `Create will create a new express project with given 
+	Long: `Create creates a new express project with given 
 configs. The new project will follow the appropriate structure for an 
 express-typescript project.`,
 	RunE: createProject,

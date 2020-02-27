@@ -3,13 +3,12 @@ package prj
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/MohamedBeydoun/atlas/pkg/util"
 )
 
-func getProject() *Project {
+func getTestProject() *Project {
 	return &Project{
 		Name:         "test",
 		AbsolutePath: "/tmp/test",
@@ -19,7 +18,7 @@ func getProject() *Project {
 }
 
 func TestCreateProject(t *testing.T) {
-	project := getProject()
+	project := getTestProject()
 	if err := project.Create(); err != nil {
 		t.Fatal(err)
 	}
@@ -37,7 +36,7 @@ func TestCreateProject(t *testing.T) {
 
 	for _, file := range expectedFiles {
 		generatedFile := fmt.Sprintf("%s/%s", project.AbsolutePath, file)
-		goldenFile := fmt.Sprintf("../testdata/%s.golden", filepath.Base(file))
+		goldenFile := fmt.Sprintf("../testdata/%s.golden", file)
 		err := util.CompareFiles(generatedFile, goldenFile)
 		if err != nil {
 			t.Fatal(err)
