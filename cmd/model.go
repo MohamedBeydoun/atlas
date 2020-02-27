@@ -36,6 +36,7 @@ func init() {
 	generateCmd.AddCommand(modelCmd)
 
 	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify a field name and type")
+	modelCmd.MarkFlagRequired("fields")
 }
 
 func generateModel(cmd *cobra.Command, args []string) error {
