@@ -25,6 +25,7 @@ atlas
 ## Usage
 
 **atlas help**
+
 Provides a description and usage instructions for the provided command.
 
 ```bash
@@ -33,6 +34,7 @@ $ atlas help <command>
 NOTE: The --help (-h) flag can be used with any command for the same effect.
 
 **atlas create**
+
 Creates a new express-typescript project.
 
 ```bash
@@ -47,6 +49,7 @@ Options:
 * --db-url: the default mongodb url
 
 **atlas generate**
+
 Generates a new resrouce of specified type. Currently, we support:
 * model
 * controller
@@ -57,6 +60,7 @@ $ atlas generate <resource> [options]
 ```
 
 **atlas generate model**
+
 Generates the model, interface, and basic database interactions files for a mongodb model.
 
 ```bash
@@ -70,6 +74,7 @@ Options:
 * --fields, -f: a list of fields with their respective types e.g. name=string,toys=\[srting\] (surround type with brakets for an array of the type)
 
 **atlas generate controller**
+
 Generates the files for an express controller.
 
 ```bash
@@ -83,6 +88,7 @@ Options:
 * --functions, -f: a list of functions to be created in the controller e.g. index,create,show,delete
 
 **atlas generate router**
+
 Generates the files for an express router.
 
 ```bash
