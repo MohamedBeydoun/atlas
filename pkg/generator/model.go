@@ -9,6 +9,7 @@ import (
 	"github.com/MohamedBeydoun/atlas/pkg/util"
 )
 
+// Model holds the model information
 type Model struct {
 	Name         string
 	Fields       map[string]string
@@ -31,6 +32,7 @@ func NewModel(name string, fields map[string]string, path string) (*Model, error
 	}, nil
 }
 
+// Create generates the model files
 func (m *Model) Create() error {
 	fmt.Printf("Creating %s model\n", m.Name)
 
