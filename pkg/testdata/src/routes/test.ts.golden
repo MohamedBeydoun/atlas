@@ -1,0 +1,8 @@
+import { Router } from "express";
+import { testController } from "../controllers/test";
+
+const testRouter: Router = Router();
+
+testRouter.post("/tests", testController["CHANGE_ME"]);
+
+export { testRouter };
