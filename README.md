@@ -59,6 +59,8 @@ Generates a new resrouce of specified type. Currently, we support:
 $ atlas generate <resource> [options]
 ```
 
+NOTE: all generate subcommands must be used in the new project's root directory
+
 **atlas generate model**
 
 Generates the model, interface, and basic database interactions files for a mongodb model.
