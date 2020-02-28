@@ -1,0 +1,22 @@
+import { Request, Response } from "express";
+
+const testController = {
+
+    index: async (req: Request, res: Response) => {
+        try {
+            res.status(500).send({ msg: "Not Implemented" });
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    },
+
+    create: async (req: Request, res: Response) => {
+        try {
+            res.status(500).send({ msg: "Not Implemented" });
+        } catch (error) {
+            res.status(500).send(error);
+        }
+    },
+};
+
+export { testController };

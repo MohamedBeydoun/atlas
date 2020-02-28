@@ -1,5 +1,6 @@
 package tpl
 
+// ModelTemplate ...
 func ModelTemplate() []byte {
 	return []byte(`import { Schema, Document, Model, model } from "mongoose";
 import { I{{ .Name | ToTitle }} } from "../../interfaces/I{{ .Name | ToTitle }}";
@@ -20,6 +21,7 @@ export { {{ .Name | ToTitle }} };
 `)
 }
 
+// InterfaceTemplate ...
 func InterfaceTemplate() []byte {
 	return []byte(`export interface I{{ .Name | ToTitle }} { {{ range $field, $type := .Fields }}{{ $isArray:=index $type 0}}
     {{ $field }}: {{ if eq $isArray 91 }}{{ $type | TrimEdges | TrimRight }}[]{{ else }}{{ $type }}{{ end }};{{ end }}
@@ -27,6 +29,7 @@ func InterfaceTemplate() []byte {
 `)
 }
 
+// InteractionsTemplate ...
 func InteractionsTemplate() []byte {
 	return []byte(`import { I{{ .Name | ToTitle }} } from "../../interfaces/I{{ .Name | ToTitle }}";
 import { {{ .Name | ToTitle }}, I{{ .Name | ToTitle }}Model } from "../models/{{ .Name }}";
