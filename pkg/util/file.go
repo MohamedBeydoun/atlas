@@ -38,7 +38,7 @@ func CreateFile(r Resource, name string, path string, templateString string, lev
 	tplFuncMap := template.FuncMap{
 		"ToUpper":   strings.ToUpper,
 		"ToTitle":   strings.Title,
-		"TrimEdges": func(str string) string { return str[1:] },
+		"TrimLeft":  func(str string) string { return str[1:] },
 		"TrimRight": func(str string) string { n := len(str); return str[:n-1] },
 	}
 
