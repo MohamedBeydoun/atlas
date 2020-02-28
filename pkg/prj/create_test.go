@@ -13,7 +13,7 @@ func getTestProject() *Project {
 		Name:         "test",
 		AbsolutePath: "/tmp/test",
 		Port:         "3000",
-		DBURL:        "mongodb://localhost:27017/PROJECT_NAME",
+		DBURL:        "mongodb://localhost:27017/test",
 	}
 }
 

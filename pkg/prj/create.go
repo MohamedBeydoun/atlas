@@ -3,6 +3,7 @@ package prj
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/tpl"
 	"github.com/MohamedBeydoun/atlas/pkg/util"
@@ -18,6 +19,8 @@ type Project struct {
 
 // Create creates a new project directory with with a conventional express-typescript file structure
 func (p *Project) Create() error {
+	p.DBURL = strings.Replace(p.DBURL, "PROJECT_NAME", p.Name, -1)
+
 	if _, err := os.Stat(p.AbsolutePath); os.IsNotExist(err) {
 		fmt.Printf("Creating new application \"%v\" at %v\n", p.Name, p.AbsolutePath)
 		if err := os.Mkdir(p.AbsolutePath, 0754); err != nil {
