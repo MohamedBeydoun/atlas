@@ -35,7 +35,7 @@ func NewRouter(name string, routes map[string]string, path string) (*Router, err
 func (r *Router) Create() error {
 	fmt.Printf("Creating %s router\n", r.Name)
 
-	fmt.Printf("    %s/src/routers/", r.Project.Name)
+	fmt.Printf("    %s/src/routes/", r.Project.Name)
 	err := util.CreateFile(r, r.Name+".ts", r.AbsolutePath, string(tpl.RouterTemplate()), 0)
 	if err != nil {
 		return err
