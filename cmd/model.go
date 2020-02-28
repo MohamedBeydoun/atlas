@@ -25,17 +25,19 @@ import (
 
 // modelCmd represents the model command
 var modelCmd = &cobra.Command{
-	Use:   "model [flags] [arg]",
+	Use:   "model [flags] [name]",
 	Short: "Model generates a mongodb model.",
 	Long: `Model generates a new mongodb model with the given
-fields.`,
+fields.
+
+Note: Model name should be singular and lowecase.`,
 	RunE: generateModel,
 }
 
 func init() {
 	generateCmd.AddCommand(modelCmd)
 
-	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types")
+	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types e.g. name=string,friends=[string]")
 	modelCmd.MarkFlagRequired("fields")
 }
 

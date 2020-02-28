@@ -68,6 +68,8 @@ func (p *Project) Create() error {
 	}
 
 	fmt.Println("Done")
+
+	fmt.Printf("\nRun the following commands:\n    cd %s\n    npm install\n", p.Name)
 	return nil
 }
 

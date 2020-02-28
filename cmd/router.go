@@ -23,30 +23,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// controllerCmd represents the controller command
-var controllerCmd = &cobra.Command{
-	Use:   "controller [flags] [name]",
-	Short: "Controller generates an express controller.",
-	Long: `Controller generates a new express controller with the given
+// routerCmd represents the router command
+var routerCmd = &cobra.Command{
+	Use:   "router [flags] [name]",
+	Short: "Router generates an express router",
+	Long: `Router generates a new express router with the given
 name and suggested functions.
 
-Note: Controller name should be singular and lowecase.`,
-	RunE: generateController,
+Note: Router name should be singular and lowecase.`,
+	RunE: generateRouter,
 }
 
 func init() {
-	generateCmd.AddCommand(controllerCmd)
-	controllerCmd.Flags().StringSliceP("functions", "f", []string{}, "Specify functions e.g. index,show,create")
+	generateCmd.AddCommand(routerCmd)
+	routerCmd.Flags().StringToStringP("routes", "r", map[string]string{}, "Specify routes e.g. get=\"/users\",post=\"/users\"")
 }
 
-func generateController(cmd *cobra.Command, args []string) error {
+func generateRouter(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return errors.New("Controller name not provided\n")
+		return errors.New("Router name not provided\n")
 	} else if len(args) > 1 {
 		return errors.New("Too many arguments\n")
 	}
 
-	functions, err := cmd.Flags().GetStringSlice("functions")
+	routes, err := cmd.Flags().GetStringToString("routes")
 	if err != nil {
 		return errors.New(err.Error())
 	}
@@ -55,11 +55,11 @@ func generateController(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	controller, err := generator.NewController(args[0], functions, wd+"/src/controllers")
+	router, err := generator.NewRouter(args[0], routes, wd+"/src/routes")
 	if err != nil {
 		return err
 	}
 
-	err = controller.Create()
+	err = router.Create()
 	return err
 }
