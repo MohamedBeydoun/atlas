@@ -97,7 +97,6 @@ Generates the files for an express router.
 $ atlas generate router <name> [options]
 ```
 NOTE: The user will have to manually choose the controller functions that go with each route by modifying the "CHANGE_ME" in the router file.
-User will also have to use the router in their app.ts.
 
 Arguments:
 * name: name of the router
