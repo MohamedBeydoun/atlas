@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/MohamedBeydoun/atlas/pkg/prj"
 	"github.com/MohamedBeydoun/atlas/pkg/tpl"
@@ -31,9 +32,16 @@ func NewRouter(name string, routes map[string]string, path string) (*Router, err
 	}, nil
 }
 
-// Create generates the controller files
+// Create generates the router files
 func (r *Router) Create() error {
 	fmt.Printf("Creating %s router\n", r.Name)
+
+	if _, err := os.Stat(fmt.Sprintf("%s/src/routes/%s.ts", r.AbsolutePath, r.Name)); os.IsNotExist(err) {
+		proceed := util.AskForConfirmation(fmt.Sprintf("    %s.ts already exists. Would you like to overwrite it?", r.Name))
+		if !proceed {
+			os.Exit(0)
+		}
+	}
 
 	fmt.Printf("    %s/src/routes/", r.Project.Name)
 	err := util.CreateFile(r, r.Name+".ts", r.AbsolutePath, string(tpl.RouterTemplate()), 0)
