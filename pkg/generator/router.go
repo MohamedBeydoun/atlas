@@ -36,13 +36,13 @@ func NewRouter(name string, routes map[string]string, path string) (*Router, err
 func (r *Router) Create() error {
 	fmt.Printf("Creating %s router\n", r.Name)
 
-	if _, err := os.Stat(fmt.Sprintf("%s/src/routes/%s.ts", r.AbsolutePath, r.Name)); os.IsNotExist(err) {
-		proceed := util.AskForConfirmation(fmt.Sprintf("    %s.ts already exists. Would you like to overwrite it?", r.Name))
+	if _, err := os.Stat(fmt.Sprintf("%s/%s.ts", r.AbsolutePath, r.Name)); err == nil {
+		proceed := util.AskForConfirmation(fmt.Sprintf("    src/routes/%s.ts already exists. Would you like to overwrite it?", r.Name))
 		if !proceed {
+			fmt.Println("Done")
 			os.Exit(0)
 		}
 	}
-
 	fmt.Printf("    %s/src/routes/", r.Project.Name)
 	err := util.CreateFile(r, r.Name+".ts", r.AbsolutePath, string(tpl.RouterTemplate()), 0)
 	if err != nil {
