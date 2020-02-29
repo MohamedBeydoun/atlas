@@ -46,13 +46,17 @@ func generateController(cmd *cobra.Command, args []string) error {
 	}
 
 	name := strcase.ToLowerCamel(args[0])
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
 	functions, err := cmd.Flags().GetStringSlice("functions")
 	if err != nil {
 		return errors.New(err.Error())
 	}
-	wd, err := os.Getwd()
-	if err != nil {
-		return err
+
+	for i, _ := range functions {
+		functions[i] = strcase.ToLowerCamel(string(functions[i]))
 	}
 
 	controller, err := generator.NewController(name, functions, wd+"/src/controllers")

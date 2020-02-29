@@ -74,7 +74,7 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		if string(route[0]) != "/" || !validURL {
-			return errors.New(fmt.Sprintf("Invalid routes format: %s\n", string(route)))
+			return errors.New(fmt.Sprintf("Invalid route format: %s\n", string(route)))
 		}
 
 		routes[strings.ToLower(method)] = route
