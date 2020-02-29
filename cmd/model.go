@@ -17,7 +17,9 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
+	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
 	"github.com/iancoleman/strcase"
@@ -48,13 +50,28 @@ func generateModel(cmd *cobra.Command, args []string) error {
 	}
 
 	name := strcase.ToLowerCamel(args[0])
-	fields, err := cmd.Flags().GetStringToString("fields")
-	if err != nil {
-		return errors.New(err.Error())
-	}
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
+	}
+	fields := make(map[string]string)
+	rawFields, err := cmd.Flags().GetStringToString("fields")
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
+	for field, fieldType := range rawFields {
+		for _, allowedType := range allowedTypes {
+			if strings.ToLower(string(fieldType)) == allowedType {
+				break
+			}
+			if !(strings.ToLower(string(fieldType)) == allowedType) && allowedType == "object" {
+				return errors.New(fmt.Sprintf("Unknown type: %s\n", string(fieldType)))
+			}
+		}
+
+		fields[strcase.ToLowerCamel(field)] = strings.ToLower(fieldType)
 	}
 
 	model, err := generator.NewModel(name, fields, wd+"/src/database")
