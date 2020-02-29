@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
+	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
 )
 
@@ -28,9 +29,7 @@ var routerCmd = &cobra.Command{
 	Use:   "router [flags] [name]",
 	Short: "Router generates an express router",
 	Long: `Router generates a new express router with the given
-name and suggested functions.
-
-Note: Router name should be singular and lowecase.`,
+name and suggested functions.`,
 	RunE: generateRouter,
 }
 
@@ -46,6 +45,7 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 		return errors.New("Too many arguments\n")
 	}
 
+	name := strcase.ToLowerCamel(args[0])
 	routes, err := cmd.Flags().GetStringToString("routes")
 	if err != nil {
 		return errors.New(err.Error())
@@ -55,7 +55,7 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	router, err := generator.NewRouter(args[0], routes, wd+"/src/routes")
+	router, err := generator.NewRouter(name, routes, wd+"/src/routes")
 	if err != nil {
 		return err
 	}

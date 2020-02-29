@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
+	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
 )
 
@@ -28,9 +29,7 @@ var controllerCmd = &cobra.Command{
 	Use:   "controller [flags] [name]",
 	Short: "Controller generates an express controller.",
 	Long: `Controller generates a new express controller with the given
-name and suggested functions.
-
-Note: Controller name should be singular and lowecase.`,
+name and suggested functions.`,
 	RunE: generateController,
 }
 
@@ -46,6 +45,7 @@ func generateController(cmd *cobra.Command, args []string) error {
 		return errors.New("Too many arguments\n")
 	}
 
+	name := strcase.ToLowerCamel(args[0])
 	functions, err := cmd.Flags().GetStringSlice("functions")
 	if err != nil {
 		return errors.New(err.Error())
@@ -55,7 +55,7 @@ func generateController(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	controller, err := generator.NewController(args[0], functions, wd+"/src/controllers")
+	controller, err := generator.NewController(name, functions, wd+"/src/controllers")
 	if err != nil {
 		return err
 	}
