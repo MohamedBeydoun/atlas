@@ -17,7 +17,10 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
+	"regexp"
+	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
 	"github.com/iancoleman/strcase"
@@ -46,13 +49,35 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 	}
 
 	name := strcase.ToLowerCamel(args[0])
-	routes, err := cmd.Flags().GetStringToString("routes")
-	if err != nil {
-		return errors.New(err.Error())
-	}
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
+	}
+	routes := make(map[string]string)
+	rawRoutes, err := cmd.Flags().GetStringToString("routes")
+	if err != nil {
+		return errors.New(err.Error())
+	}
+
+	expectedHttpMethods := []string{"get", "post", "put", "patch", "update", "delete"}
+	for method, route := range rawRoutes {
+		for _, expectedMethod := range expectedHttpMethods {
+			if strings.ToLower(string(method)) == expectedMethod {
+				break
+			}
+			if !(strings.ToLower(string(method)) == expectedMethod) && expectedMethod == "delete" {
+				return errors.New(fmt.Sprintf("Unknown http method: %s\n", method))
+			}
+		}
+		validURL, err := regexp.MatchString(`^\/[/.a-zA-Z0-9-]+$`, string(route))
+		if err != nil {
+			return err
+		}
+		if string(route[0]) != "/" || !validURL {
+			return errors.New(fmt.Sprintf("Invalid routes format: %s\n", string(route)))
+		}
+
+		routes[strings.ToLower(method)] = route
 	}
 
 	router, err := generator.NewRouter(name, routes, wd+"/src/routes")
