@@ -20,6 +20,7 @@ import (
 	"os"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
+	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
 )
 
@@ -28,9 +29,7 @@ var modelCmd = &cobra.Command{
 	Use:   "model [flags] [name]",
 	Short: "Model generates a mongodb model.",
 	Long: `Model generates a new mongodb model with the given
-fields.
-
-Note: Model name should be singular and lowecase.`,
+fields.`,
 	RunE: generateModel,
 }
 
@@ -48,6 +47,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		return errors.New("Too many arguments\n")
 	}
 
+	name := strcase.ToLowerCamel(args[0])
 	fields, err := cmd.Flags().GetStringToString("fields")
 	if err != nil {
 		return errors.New(err.Error())
@@ -57,7 +57,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	model, err := generator.NewModel(args[0], fields, wd+"/src/database")
+	model, err := generator.NewModel(name, fields, wd+"/src/database")
 	if err != nil {
 		return err
 	}

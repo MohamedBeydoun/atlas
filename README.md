@@ -70,7 +70,7 @@ $ atlas generate model <name> [options]
 ```
 
 Arguments:
-* name: name of the model (`MUST` be singular lowecase)
+* name: name of the model
 
 Options:
 * --fields, -f: a list of fields with their respective types e.g. name=string,toys=\[srting\] (surround type with brakets for an array of the type)
@@ -84,7 +84,7 @@ $ atlas generate controller <name> -f [options]
 ```
 
 Arguments:
-* name: name of the controller (`MUST` be singular lowecase)
+* name: name of the controller
 
 Options:
 * --functions, -f: a list of functions to be created in the controller e.g. index,create,show,delete
@@ -100,7 +100,7 @@ NOTE: The user will have to manually choose the controller functions that go wit
 User will also have to use the router in their app.ts.
 
 Arguments:
-* name: name of the router (`MUST` be singular lowecase)
+* name: name of the router
 
 Options:
 * --routes, -r: a list of routes with their http method and url e.g. post="/users",get="/users/:userId"

@@ -9,7 +9,7 @@ export interface I{{ .Name | ToTitle }}Model extends I{{ .Name | ToTitle }}, Doc
 
 const {{ .Name }}Schema: Schema = new Schema({ {{ range $field, $type := .Fields }}{{ $isArray:=index $type 0}}
     {{ $field }}: {{ if eq $isArray 91 }}[{
-        type: {{ $type | TrimLefLeft | TrimRight | ToTitle }}
+        type: {{ $type | TrimLeft | TrimRight | ToTitle }}
     }],{{else}}{
         type: {{ $type | ToTitle }}
     },{{ end }}{{ end }}
