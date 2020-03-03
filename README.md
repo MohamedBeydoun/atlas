@@ -59,7 +59,7 @@ Generates a new resrouce of specified type. Currently, we support:
 $ atlas generate <resource> [options]
 ```
 
-NOTE: all generate subcommands must be used in the new project's root directory
+NOTE: All generate subcommands must be used in the new project's root directory. Also, preferably, resource names should be singular as the cli will change to plural as needed.
 
 **atlas generate model**
 
