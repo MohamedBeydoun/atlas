@@ -17,10 +17,7 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
-	"regexp"
-	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
 	"github.com/iancoleman/strcase"
@@ -30,15 +27,14 @@ import (
 // routerCmd represents the router command
 var routerCmd = &cobra.Command{
 	Use:   "router [flags] [name]",
-	Short: "Router generates an express router",
-	Long: `Router generates a new express router with the given
-name and suggested functions.`,
-	RunE: generateRouter,
+	Short: "Router generates an express router.",
+	Long:  `Router generates a new express router with it's respective controller.`,
+	RunE:  generateRouter,
 }
 
 func init() {
 	generateCmd.AddCommand(routerCmd)
-	routerCmd.Flags().StringToStringP("routes", "r", map[string]string{}, "Specify routes e.g. get=\"/users\",post=\"/users\"")
+	// routerCmd.Flags().StringToStringP("routes", "r", map[string]string{}, "Specify routes e.g. get=\"/users\",post=\"/users\"")
 }
 
 func generateRouter(cmd *cobra.Command, args []string) error {
@@ -53,34 +49,34 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	routes := make(map[string]string)
-	rawRoutes, err := cmd.Flags().GetStringToString("routes")
-	if err != nil {
-		return errors.New(err.Error())
-	}
+	// routes := make(map[string]string)
+	// rawRoutes, err := cmd.Flags().GetStringToString("routes")
+	// if err != nil {
+	// 	return errors.New(err.Error())
+	// }
 
-	expectedHttpMethods := []string{"get", "post", "put", "patch", "update", "delete"}
-	for method, route := range rawRoutes {
-		for _, expectedMethod := range expectedHttpMethods {
-			if strings.ToLower(string(method)) == expectedMethod {
-				break
-			}
-			if !(strings.ToLower(string(method)) == expectedMethod) && expectedMethod == "delete" {
-				return errors.New(fmt.Sprintf("Unknown http method: %s\n", method))
-			}
-		}
-		validURL, err := regexp.MatchString(`^\/[/.a-zA-Z0-9-]+$`, string(route))
-		if err != nil {
-			return err
-		}
-		if string(route[0]) != "/" || !validURL {
-			return errors.New(fmt.Sprintf("Invalid route format: %s\n", string(route)))
-		}
+	// expectedHttpMethods := []string{"get", "post", "put", "patch", "update", "delete"}
+	// for method, route := range rawRoutes {
+	// 	for _, expectedMethod := range expectedHttpMethods {
+	// 		if strings.ToLower(string(method)) == expectedMethod {
+	// 			break
+	// 		}
+	// 		if !(strings.ToLower(string(method)) == expectedMethod) && expectedMethod == "delete" {
+	// 			return errors.New(fmt.Sprintf("Unknown http method: %s\n", method))
+	// 		}
+	// 	}
+	// 	validURL, err := regexp.MatchString(`^\/[/.a-zA-Z0-9-]+$`, string(route))
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// 	if string(route[0]) != "/" || !validURL {
+	// 		return errors.New(fmt.Sprintf("Invalid route format: %s\n", string(route)))
+	// 	}
 
-		routes[strings.ToLower(method)] = route
-	}
+	// 	routes[strings.ToLower(method)] = route
+	// }
 
-	router, err := generator.NewRouter(name, routes, wd+"/src/routes")
+	router, err := generator.NewRouter(name, wd+"/src/routes")
 	if err != nil {
 		return err
 	}

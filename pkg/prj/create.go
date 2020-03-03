@@ -31,7 +31,7 @@ func (p *Project) Create() error {
 		os.Exit(0)
 	}
 
-	err := util.CreateFolders(p, []string{"test"}, p.AbsolutePath, 0751, true, 1)
+	err := util.CreateFolders(p, []string{"test"}, p.AbsolutePath, 0751, false, 1)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func (p *Project) Create() error {
 		return err
 	}
 
-	err = util.CreateFolders(p, []string{"src"}, p.AbsolutePath, 0751, true, 1)
+	err = util.CreateFolders(p, []string{"src"}, p.AbsolutePath, 0751, false, 1)
 	if err != nil {
 		return err
 	}
@@ -79,13 +79,13 @@ func (p *Project) Create() error {
 // populateSrc populates the src directory with appropriate files and folders
 func (p *Project) populateSrc() error {
 	srcFolders := []string{"routes", "controllers", "interfaces", "middleware", "util", "database"}
-	err := util.CreateFolders(p, srcFolders, p.AbsolutePath+"/src", 0751, true, 2)
+	err := util.CreateFolders(p, srcFolders, p.AbsolutePath+"/src", 0751, false, 2)
 	if err != nil {
 		return err
 	}
 
 	dbFolders := []string{"models", "interactions"}
-	err = util.CreateFolders(p, dbFolders, p.AbsolutePath+"/src/database", 0751, true, 3)
+	err = util.CreateFolders(p, dbFolders, p.AbsolutePath+"/src/database", 0751, false, 3)
 	if err != nil {
 		return err
 	}
@@ -105,7 +105,7 @@ func (p *Project) populateSrc() error {
 // populateSrc populates the test directory with appropriate files and folders
 func (p *Project) populateTest() error {
 	testFolders := []string{"routes"}
-	err := util.CreateFolders(p, testFolders, p.AbsolutePath+"/test", 0751, true, 2)
+	err := util.CreateFolders(p, testFolders, p.AbsolutePath+"/test", 0751, false, 2)
 	if err != nil {
 		return err
 	}

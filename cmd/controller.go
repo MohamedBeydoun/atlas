@@ -15,55 +15,55 @@ limitations under the License.
 */
 package cmd
 
-import (
-	"errors"
-	"os"
+// import (
+// 	"errors"
+// 	"os"
 
-	"github.com/MohamedBeydoun/atlas/pkg/generator"
-	"github.com/iancoleman/strcase"
-	"github.com/spf13/cobra"
-)
+// 	"github.com/MohamedBeydoun/atlas/pkg/generator"
+// 	"github.com/iancoleman/strcase"
+// 	"github.com/spf13/cobra"
+// )
 
-// controllerCmd represents the controller command
-var controllerCmd = &cobra.Command{
-	Use:   "controller [flags] [name]",
-	Short: "Controller generates an express controller.",
-	Long: `Controller generates a new express controller with the given
-name and suggested functions.`,
-	RunE: generateController,
-}
+// // controllerCmd represents the controller command
+// var controllerCmd = &cobra.Command{
+// 	Use:   "controller [flags] [name]",
+// 	Short: "Controller generates an express controller.",
+// 	Long: `Controller generates a new express controller with the given
+// name and suggested functions.`,
+// 	RunE: generateController,
+// }
 
-func init() {
-	generateCmd.AddCommand(controllerCmd)
-	controllerCmd.Flags().StringSliceP("functions", "f", []string{}, "Specify functions e.g. index,show,create")
-}
+// func init() {
+// 	generateCmd.AddCommand(controllerCmd)
+// 	controllerCmd.Flags().StringSliceP("functions", "f", []string{}, "Specify functions e.g. index,show,create")
+// }
 
-func generateController(cmd *cobra.Command, args []string) error {
-	if len(args) == 0 {
-		return errors.New("Controller name not provided\n")
-	} else if len(args) > 1 {
-		return errors.New("Too many arguments\n")
-	}
+// func generateController(cmd *cobra.Command, args []string) error {
+// 	if len(args) == 0 {
+// 		return errors.New("Controller name not provided\n")
+// 	} else if len(args) > 1 {
+// 		return errors.New("Too many arguments\n")
+// 	}
 
-	name := strcase.ToLowerCamel(args[0])
-	wd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	functions, err := cmd.Flags().GetStringSlice("functions")
-	if err != nil {
-		return errors.New(err.Error())
-	}
+// 	name := strcase.ToLowerCamel(args[0])
+// 	wd, err := os.Getwd()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	functions, err := cmd.Flags().GetStringSlice("functions")
+// 	if err != nil {
+// 		return errors.New(err.Error())
+// 	}
 
-	for i, _ := range functions {
-		functions[i] = strcase.ToLowerCamel(string(functions[i]))
-	}
+// 	for i, _ := range functions {
+// 		functions[i] = strcase.ToLowerCamel(string(functions[i]))
+// 	}
 
-	controller, err := generator.NewController(name, functions, wd+"/src/controllers")
-	if err != nil {
-		return err
-	}
+// 	controller, err := generator.NewController(name, functions, wd+"/src/controllers")
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = controller.Create()
-	return err
-}
+// 	err = controller.Create()
+// 	return err
+// }
