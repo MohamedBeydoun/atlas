@@ -34,7 +34,6 @@ var routerCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(routerCmd)
-	// routerCmd.Flags().StringToStringP("routes", "r", map[string]string{}, "Specify routes e.g. get=\"/users\",post=\"/users\"")
 }
 
 func generateRouter(cmd *cobra.Command, args []string) error {
@@ -49,32 +48,6 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	// routes := make(map[string]string)
-	// rawRoutes, err := cmd.Flags().GetStringToString("routes")
-	// if err != nil {
-	// 	return errors.New(err.Error())
-	// }
-
-	// expectedHttpMethods := []string{"get", "post", "put", "patch", "update", "delete"}
-	// for method, route := range rawRoutes {
-	// 	for _, expectedMethod := range expectedHttpMethods {
-	// 		if strings.ToLower(string(method)) == expectedMethod {
-	// 			break
-	// 		}
-	// 		if !(strings.ToLower(string(method)) == expectedMethod) && expectedMethod == "delete" {
-	// 			return errors.New(fmt.Sprintf("Unknown http method: %s\n", method))
-	// 		}
-	// 	}
-	// 	validURL, err := regexp.MatchString(`^\/[/.a-zA-Z0-9-]+$`, string(route))
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	if string(route[0]) != "/" || !validURL {
-	// 		return errors.New(fmt.Sprintf("Invalid route format: %s\n", string(route)))
-	// 	}
-
-	// 	routes[strings.ToLower(method)] = route
-	// }
 
 	router, err := generator.NewRouter(name, wd+"/src/routes")
 	if err != nil {

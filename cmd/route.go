@@ -37,10 +37,11 @@ var routeCmd = &cobra.Command{
 
 func init() {
 	generateCmd.AddCommand(routeCmd)
-	routeCmd.Flags().StringP("router", "r", "dummy", "Router name")
+	routeCmd.Flags().StringP("router", "r", "", "Router name")
 	routeCmd.Flags().StringP("method", "m", "get", "HTTP method for the route")
 	routeCmd.Flags().StringP("url", "u", "/dummy", "Route endpoint")
 	routeCmd.Flags().StringP("controller", "c", "index", "The controller function name for handling the route logic")
+	routeCmd.MarkFlagRequired("router")
 }
 
 func generateRoute(cmd *cobra.Command, args []string) error {

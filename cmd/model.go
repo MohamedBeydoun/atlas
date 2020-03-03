@@ -60,7 +60,6 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		return errors.New(err.Error())
 	}
 
-	fmt.Printf("%+v\n", rawFields)
 	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
 	for field, fieldType := range rawFields {
 		for _, allowedType := range allowedTypes {
@@ -75,7 +74,6 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		fields[strcase.ToLowerCamel(field)] = strings.ToLower(fieldType)
 	}
 
-	fmt.Printf("%+v\n", fields)
 	model, err := generator.NewModel(name, fields, wd)
 	if err != nil {
 		return err
