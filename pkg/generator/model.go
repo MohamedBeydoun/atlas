@@ -36,7 +36,7 @@ func (m *Model) Create() error {
 	fmt.Printf("Creating %s model\n", m.Name)
 	err := error(nil)
 
-	if _, err := os.Stat(fmt.Sprintf("%s/models/%s.ts", m.Project.AbsolutePath, m.Name)); err == nil {
+	if _, err := os.Stat(fmt.Sprintf("%s/src/database/models/%s.ts", m.Project.AbsolutePath, m.Name)); err == nil {
 		proceed := util.AskForConfirmation(fmt.Sprintf("    src/database/models/%s.ts already exists. Would you like to overwrite it?", m.Name))
 		if !proceed {
 			goto createInterface
@@ -50,7 +50,7 @@ func (m *Model) Create() error {
 
 createInterface:
 	if _, err := os.Stat(fmt.Sprintf("%s/src/interfaces/%s.ts", m.Project.AbsolutePath, "I"+strings.Title(m.Name))); err == nil {
-		proceed := util.AskForConfirmation(fmt.Sprintf("    src/interfaces/%s.ts already exists. Would you like to overwrite it?", m.Name))
+		proceed := util.AskForConfirmation(fmt.Sprintf("    src/interfaces/I%s.ts already exists. Would you like to overwrite it?", strings.Title(m.Name)))
 		if !proceed {
 			goto createInteractions
 		}
@@ -65,6 +65,7 @@ createInteractions:
 	if _, err := os.Stat(fmt.Sprintf("%s/src/database/interactions/%s.ts", m.Project.AbsolutePath, m.Name)); err == nil {
 		proceed := util.AskForConfirmation(fmt.Sprintf("    src/database/interactions/%s.ts already exists. Would you like to overwrite it?", m.Name))
 		if !proceed {
+			fmt.Println("Done")
 			os.Exit(0)
 		}
 	}
