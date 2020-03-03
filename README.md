@@ -52,8 +52,8 @@ Options:
 
 Generates a new resrouce of specified type. Currently, we support:
 * model
-* controller
 * router
+* route
 
 ```bash
 $ atlas generate <resource> [options]
@@ -75,34 +75,30 @@ Arguments:
 Options:
 * --fields, -f: a list of fields with their respective types e.g. name=string,toys=\[srting\] (surround type with brakets for an array of the type)
 
-**atlas generate controller**
-
-Generates the files for an express controller.
-
-```bash
-$ atlas generate controller <name> -f [options]
-```
-
-Arguments:
-* name: name of the controller
-
-Options:
-* --functions, -f: a list of functions to be created in the controller e.g. index,create,show,delete
-
 **atlas generate router**
 
-Generates the files for an express router.
+Generates the files for an express router along with it's controller.
 
 ```bash
 $ atlas generate router <name> [options]
 ```
-NOTE: The user will have to manually choose the controller functions that go with each route by modifying the "CHANGE_ME" in the router file.
 
 Arguments:
 * name: name of the router
 
+**atlas generate route**
+
+Populates the router and controller files with the given route information.
+
+```bash
+$ atlas generate route [options]
+```
+
 Options:
-* --routes, -r: a list of routes with their http method and url e.g. post="/users",get="/users/:userId"
+* --router, -r: the name of the router to which this route is associated
+* --method, -m: HTTP method for the route e.g. get, post, etc
+* --url, -u: the route's endpoint
+* --controller, -c: the name of the controller function associated with this route e.g. index, show, delete, etc
 
 ## License
 
