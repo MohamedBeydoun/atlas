@@ -36,11 +36,19 @@ func Run() error {
 		return err
 	}
 
-	cmd := exec.Command("node", "-i", "-e", "\"$(< console.js)\"", "--experimental-repl-await")
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = os.Stdin
-	cmd.Stderr = os.Stderr
-	cmd.Run()
+	console := exec.Command("node", "-i", "-e", "\"$(< console.js)\"", "--experimental-repl-await")
+	console.Stdout = os.Stdout
+	console.Stderr = os.Stderr
+	stdin, err := console.StdinPipe()
+	if err != nil {
+		return err
+	}
+	defer stdin.Close()
+
+	err = console.Run()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
