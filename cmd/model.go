@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
@@ -38,7 +39,7 @@ fields.`,
 func init() {
 	generateCmd.AddCommand(modelCmd)
 
-	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types e.g. name=string,friends=[string]")
+	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types (can be used repeatedly) e.g. name=string,friends=string[]")
 	modelCmd.MarkFlagRequired("fields")
 }
 
@@ -60,10 +61,18 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		return errors.New(err.Error())
 	}
 
+	validName, err := regexp.MatchString(`^[a-zA-Z][a-zA-Z0-9]*$`, name)
+	if err != nil {
+		return err
+	}
+	if !validName {
+		return errors.New("Invalid router name")
+	}
+
 	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
 	for field, fieldType := range rawFields {
 		for _, allowedType := range allowedTypes {
-			if strings.ToLower(string(fieldType)) == allowedType {
+			if strings.ToLower(string(fieldType)) == allowedType || strings.ToLower(string(fieldType)) == fmt.Sprintf("%s[]", allowedType) {
 				break
 			}
 			if !(strings.ToLower(string(fieldType)) == allowedType) && allowedType == "object" {
@@ -74,7 +83,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		fields[strcase.ToLowerCamel(field)] = strings.ToLower(fieldType)
 	}
 
-	model, err := generator.NewModel(name, fields, wd+"/src/database")
+	model, err := generator.NewModel(name, fields, wd)
 	if err != nil {
 		return err
 	}

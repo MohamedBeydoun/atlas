@@ -11,9 +11,8 @@ import (
 
 func getTestModel() *Model {
 	return &Model{
-		Name:         "test",
-		AbsolutePath: "/tmp/test/src/database",
-		Fields:       map[string]string{"test": "string", "test2": "[string]"},
+		Name:   "test",
+		Fields: map[string]string{"test": "string", "test2": "[string]"},
 		Project: &prj.Project{
 			Name:         "test",
 			AbsolutePath: "/tmp/test",
