@@ -17,9 +17,13 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
+	"regexp"
+	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
+	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
 )
 
@@ -28,16 +32,14 @@ var modelCmd = &cobra.Command{
 	Use:   "model [flags] [name]",
 	Short: "Model generates a mongodb model.",
 	Long: `Model generates a new mongodb model with the given
-fields.
-
-Note: Model name should be singular and lowecase.`,
+fields.`,
 	RunE: generateModel,
 }
 
 func init() {
 	generateCmd.AddCommand(modelCmd)
 
-	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types e.g. name=string,friends=[string]")
+	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types (can be used repeatedly) e.g. name=string,friends=string[]")
 	modelCmd.MarkFlagRequired("fields")
 }
 
@@ -48,16 +50,40 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		return errors.New("Too many arguments\n")
 	}
 
-	fields, err := cmd.Flags().GetStringToString("fields")
-	if err != nil {
-		return errors.New(err.Error())
-	}
+	name := strcase.ToLowerCamel(args[0])
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
 	}
+	fields := make(map[string]string)
+	rawFields, err := cmd.Flags().GetStringToString("fields")
+	if err != nil {
+		return errors.New(err.Error())
+	}
 
-	model, err := generator.NewModel(args[0], fields, wd+"/src/database")
+	validName, err := regexp.MatchString(`^[a-zA-Z][a-zA-Z0-9]*$`, name)
+	if err != nil {
+		return err
+	}
+	if !validName {
+		return errors.New("Invalid router name")
+	}
+
+	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
+	for field, fieldType := range rawFields {
+		for _, allowedType := range allowedTypes {
+			if strings.ToLower(string(fieldType)) == allowedType || strings.ToLower(string(fieldType)) == fmt.Sprintf("%s[]", allowedType) {
+				break
+			}
+			if !(strings.ToLower(string(fieldType)) == allowedType) && allowedType == "object" {
+				return errors.New(fmt.Sprintf("Unknown type: %s\n", string(fieldType)))
+			}
+		}
+
+		fields[strcase.ToLowerCamel(field)] = strings.ToLower(fieldType)
+	}
+
+	model, err := generator.NewModel(name, fields, wd)
 	if err != nil {
 		return err
 	}

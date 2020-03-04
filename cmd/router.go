@@ -18,25 +18,23 @@ package cmd
 import (
 	"errors"
 	"os"
+	"regexp"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
+	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
 )
 
 // routerCmd represents the router command
 var routerCmd = &cobra.Command{
 	Use:   "router [flags] [name]",
-	Short: "Router generates an express router",
-	Long: `Router generates a new express router with the given
-name and suggested functions.
-
-Note: Router name should be singular and lowecase.`,
-	RunE: generateRouter,
+	Short: "Router generates an express router.",
+	Long:  `Router generates a new express router with it's respective controller.`,
+	RunE:  generateRouter,
 }
 
 func init() {
 	generateCmd.AddCommand(routerCmd)
-	routerCmd.Flags().StringToStringP("routes", "r", map[string]string{}, "Specify routes e.g. get=\"/users\",post=\"/users\"")
 }
 
 func generateRouter(cmd *cobra.Command, args []string) error {
@@ -46,16 +44,21 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 		return errors.New("Too many arguments\n")
 	}
 
-	routes, err := cmd.Flags().GetStringToString("routes")
-	if err != nil {
-		return errors.New(err.Error())
-	}
+	name := strcase.ToLowerCamel(args[0])
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
 	}
 
-	router, err := generator.NewRouter(args[0], routes, wd+"/src/routes")
+	validName, err := regexp.MatchString(`^[a-zA-Z][a-zA-Z0-9]*$`, name)
+	if err != nil {
+		return err
+	}
+	if !validName {
+		return errors.New("Invalid router name")
+	}
+
+	router, err := generator.NewRouter(name, wd+"/src/routes")
 	if err != nil {
 		return err
 	}

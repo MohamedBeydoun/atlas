@@ -40,6 +40,9 @@ func CreateFile(r Resource, name string, path string, templateString string, lev
 		"ToTitle":   strings.Title,
 		"TrimLeft":  func(str string) string { return str[1:] },
 		"TrimRight": func(str string) string { n := len(str); return str[:n-1] },
+		"minus": func(a int, b int) int {
+			return a - b
+		},
 	}
 
 	file, err := os.Create(fmt.Sprintf("%s/%s", path, name))
