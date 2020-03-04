@@ -72,9 +72,9 @@ func (r *Route) Create() error {
 	controllerStr := fmt.Sprintf(`
     %s: async (req: Request, res: Response) => {
         try {
-            res.status(500).send({ msg: "Not Implemented" });
+            res.status(statusCodes.NOT_IMPLEMENTED).send({ msg: "Not Implemented" });
         } catch (err) {
-            res.status(500).send(err);
+            res.status(statusCodes.INTERNAL_SERVER_ERROR).send(err);
         }
     },`, r.Controller)
 

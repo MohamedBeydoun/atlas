@@ -29,7 +29,7 @@ import (
 
 // routeCmd represents the route command
 var routeCmd = &cobra.Command{
-	Use:   "route [flags] [name]",
+	Use:   "route [flags]",
 	Short: "Route generates an express route.",
 	Long:  `Route generates a new express route with it's respective controller functions.`,
 	RunE:  generateRoute,
@@ -40,7 +40,7 @@ func init() {
 	routeCmd.Flags().StringP("router", "r", "", "Router name")
 	routeCmd.Flags().StringP("method", "m", "get", "HTTP method for the route")
 	routeCmd.Flags().StringP("url", "u", "/dummy", "Route endpoint")
-	routeCmd.Flags().StringP("controller", "c", "index", "The controller function name for handling the route logic")
+	routeCmd.Flags().StringP("controller", "c", "dummy", "The controller function name for handling the route logic")
 	routeCmd.MarkFlagRequired("router")
 }
 

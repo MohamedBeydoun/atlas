@@ -18,6 +18,7 @@ package cmd
 import (
 	"errors"
 	"os"
+	"regexp"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
 	"github.com/iancoleman/strcase"
@@ -47,6 +48,14 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
+	}
+
+	validName, err := regexp.MatchString(`^[a-zA-Z][a-zA-Z0-9]*$`, name)
+	if err != nil {
+		return err
+	}
+	if !validName {
+		return errors.New("Invalid router name")
 	}
 
 	router, err := generator.NewRouter(name, wd+"/src/routes")

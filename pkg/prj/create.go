@@ -78,7 +78,7 @@ func (p *Project) Create() error {
 
 // populateSrc populates the src directory with appropriate files and folders
 func (p *Project) populateSrc() error {
-	srcFolders := []string{"routes", "controllers", "interfaces", "middleware", "util", "database"}
+	srcFolders := []string{"routes", "controllers", "interfaces", "middleware", "database"}
 	err := util.CreateFolders(p, srcFolders, p.AbsolutePath+"/src", 0751, false, 2)
 	if err != nil {
 		return err
@@ -86,6 +86,16 @@ func (p *Project) populateSrc() error {
 
 	dbFolders := []string{"models", "interactions"}
 	err = util.CreateFolders(p, dbFolders, p.AbsolutePath+"/src/database", 0751, false, 3)
+	if err != nil {
+		return err
+	}
+
+	utilFolder := []string{"util"}
+	err = util.CreateFolders(p, utilFolder, p.AbsolutePath+"/src", 0751, false, 2)
+	if err != nil {
+		return err
+	}
+	err = util.CreateFile(p, "statusCodes.ts", p.AbsolutePath+"/src/util", string(tpl.HTTPCodesTemplate()), 3)
 	if err != nil {
 		return err
 	}

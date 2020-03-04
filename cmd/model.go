@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/generator"
@@ -58,6 +59,14 @@ func generateModel(cmd *cobra.Command, args []string) error {
 	rawFields, err := cmd.Flags().GetStringToString("fields")
 	if err != nil {
 		return errors.New(err.Error())
+	}
+
+	validName, err := regexp.MatchString(`^[a-zA-Z][a-zA-Z0-9]*$`, name)
+	if err != nil {
+		return err
+	}
+	if !validName {
+		return errors.New("Invalid router name")
 	}
 
 	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
