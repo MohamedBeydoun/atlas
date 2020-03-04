@@ -49,7 +49,7 @@ func generateRoute(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	router = strings.ToLower(router)
+	router = strcase.ToLowerCamel(router)
 
 	method, err := cmd.Flags().GetString("method")
 	if err != nil {
