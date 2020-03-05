@@ -1,6 +1,6 @@
 VERSION := $(shell bash scripts/version.sh; cat VERSION)
 
-.PHONY: version test bin build coverage
+.PHONY: version test bin
 
 test:
 	go test -cover ./pkg/...
