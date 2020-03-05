@@ -8,15 +8,29 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/MohamedBeydoun/atlas/pkg/prj"
+
 	"github.com/MohamedBeydoun/atlas/pkg/tpl"
 	"github.com/MohamedBeydoun/atlas/pkg/util"
 )
 
+type consoleConfig struct {
+	DBURL  string
+	Models []string
+}
+
 // Run starts a development console
-func Run() error {
+func Run(dbURL string) error {
 	fmt.Println("Running console...")
 
-	err := exec.Command("npm", "run", "build").Run()
+	project, err := prj.Current()
+	if err != nil {
+		return err
+	}
+	projectName := filepath.Base(project.AbsolutePath)
+	dbURL = strings.Replace(dbURL, "PROJECT_NAME", projectName, -1)
+
+	err = exec.Command("npm", "run", "build").Run()
 	if err != nil {
 		return err
 	}
@@ -37,7 +51,7 @@ func Run() error {
 	}
 
 	fmt.Print("Created ")
-	err = util.CreateFile(models, ".console", wd, string(tpl.ConsoleTemplate()), 0)
+	err = util.CreateFile(consoleConfig{DBURL: dbURL, Models: models}, ".console", wd, string(tpl.ConsoleTemplate()), 0)
 	if err != nil {
 		return err
 	}

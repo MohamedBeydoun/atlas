@@ -31,9 +31,15 @@ Useful for debugging and creating test data.`,
 
 func init() {
 	rootCmd.AddCommand(consoleCmd)
+	consoleCmd.Flags().String("db-url", "mongodb://localhost:27017/PROJECT_NAME", "The mongodb url")
 }
 
 func runConsole(cmd *cobra.Command, args []string) error {
-	err := console.Run()
+	dbURL, err := cmd.Flags().GetString("db-url")
+	if err != nil {
+		return err
+	}
+
+	err = console.Run(dbURL)
 	return err
 }

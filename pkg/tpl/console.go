@@ -6,7 +6,7 @@ func ConsoleTemplate() []byte {
 global.mongoose = require("mongoose")
 global.App =  require("./dist/app.js").app
 
-global.mongoose.connect("mongodb://localhost:27017/test", {
+global.mongoose.connect("{{ .DBURL }}", {
     useNewUrlParser: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
@@ -14,7 +14,7 @@ global.mongoose.connect("mongodb://localhost:27017/test", {
 });
 global.mongoose.set("useCreateIndex", true);
 
-{{ range $model := . }}
+{{ range $model := .Models }}
 global.{{ $model | ToTitle }} = require("./dist/database/interactions/{{ $model }}.js").{{ $model }}DBInteractions
 {{ end }}
 
