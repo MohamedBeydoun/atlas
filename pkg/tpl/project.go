@@ -12,6 +12,7 @@ func GitignoreTemplate() []byte {
 	return []byte(`node_modules
 .nyc_output
 dist/
+.console
 `)
 }
 
