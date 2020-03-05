@@ -9,7 +9,7 @@ if ! jq_loc="$(type -p "jq")" || [[ -z $jq_loc ]]; then
 fi
 
 # Parse commits
-for message in $(curl -s https://api.github.com/repos/MohamedBeydoun/atlas/commits | jq -c '.[].commit.message' | cut -d '"' -f 2 | cut -d '/' -f 1 | tac); do
+for message in $(git log --pretty=format:'{%n "subject": "%s" %n},' | sed "$ s/,$//" | sed ':a;N;$!ba;s/\r\n\([^{]\)/\\n\1/g'| awk 'BEGIN { print("[") } { print($0) } END { print("]") }'| jq -c '.[].subject' | cut -d '"' -f 2 | cut -d '/' -f 1 | tac); do
 	if [ $message == "Bugfixes" ]; then
 		PATCH=$(($PATCH+1))
 	elif [ $message == "Features" ]; then
@@ -18,5 +18,11 @@ for message in $(curl -s https://api.github.com/repos/MohamedBeydoun/atlas/commi
 	fi
 done
 
+BRANCH=$(git branch | grep \* | cut -d ' ' -f 2 | sed "$ s/\//-/")
+
 # Output VERSION file
-echo $MAJOR.$MINOR.$PATCH > VERSION
+if [ $BRANCH == "master" ]; then
+	echo $MAJOR.$MINOR.$PATCH > VERSION
+else
+	echo $MAJOR.$MINOR.$PATCH-$BRANCH > VERSION
+fi
