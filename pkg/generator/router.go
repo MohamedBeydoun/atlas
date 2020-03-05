@@ -13,23 +13,20 @@ import (
 
 // Router holds the router information
 type Router struct {
-	Name         string
-	Routes       map[string]string
-	AbsolutePath string
-	Project      *prj.Project
+	Name    string
+	Project *prj.Project
 }
 
 // NewRouter creates a new router struct
-func NewRouter(name string, path string) (*Router, error) {
+func NewRouter(name string) (*Router, error) {
 	project, err := prj.Current()
 	if err != nil {
 		return nil, err
 	}
 
 	return &Router{
-		Name:         name,
-		AbsolutePath: path,
-		Project:      project,
+		Name:    name,
+		Project: project,
 	}, nil
 }
 
@@ -39,15 +36,15 @@ func (r *Router) Create() error {
 
 	err := error(nil)
 	isNewRouter := true
-	if _, err := os.Stat(fmt.Sprintf("%s/%s.ts", r.AbsolutePath, r.Name)); err == nil {
+	if _, err := os.Stat(fmt.Sprintf("%s/src/routes/%s.ts", r.Project.AbsolutePath, r.Name)); err == nil {
 		proceed := util.AskForConfirmation(fmt.Sprintf("    src/routes/%s.ts already exists. Would you like to overwrite it?", r.Name))
+		isNewRouter = false
 		if !proceed {
-			isNewRouter = false
 			goto createController
 		}
 	}
 	fmt.Print("    src/routes/")
-	err = util.CreateFile(r, r.Name+".ts", r.AbsolutePath, string(tpl.RouterTemplate()), 0)
+	err = util.CreateFile(r, r.Name+".ts", r.Project.AbsolutePath+"/src/routes", string(tpl.RouterTemplate()), 0)
 	if err != nil {
 		return err
 	}
