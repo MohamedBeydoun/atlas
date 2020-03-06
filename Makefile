@@ -3,13 +3,18 @@ VERSION := $(shell bash scripts/version.sh; cat VERSION)
 .PHONY: version test bin
 
 test:
-	go test -cover ./pkg/...
+	@echo "Running tests..."
+	@go test -cover ./pkg/...
 
 version:
-	bash scripts/version.sh
+	@bash scripts/version.sh
+	@echo "Version: $(shell cat VERSION)"
 
 bin:
-	mkdir -p bin
-	GOOS=linux GOARCH=amd64 go build -o bin/atlas-$(VERSION)-linux-amd64
-	GOOS=windows GOARCH=amd64 go build -o bin/atlas-$(VERSION)-windows-amd64
-	GOOS=darwin GOARCH=amd64 go build -o bin/atlas-$(VERSION)-darwin-amd64
+	@mkdir -p bin
+	@GOOS=linux GOARCH=amd64 go build -o bin/atlas-$(VERSION)-linux-amd64
+	@echo "Generated bin/atlas-$(VERSION)-linux-amd64"
+	@GOOS=windows GOARCH=amd64 go build -o bin/atlas-$(VERSION)-windows-amd64
+	@echo "Generated bin/atlas-$(VERSION)-windows-amd64"
+	@GOOS=darwin GOARCH=amd64 go build -o bin/atlas-$(VERSION)-darwin-amd64
+	@echo "Generated bin/atlas-$(VERSION)-darwin-amd64"
