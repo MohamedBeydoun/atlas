@@ -69,6 +69,10 @@ func (p *Project) Create() error {
 	if err != nil {
 		return err
 	}
+	err = util.CreateFile(p, ".atlas", p.AbsolutePath, "", 1)
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("Done")
 
