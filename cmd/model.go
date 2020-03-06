@@ -67,7 +67,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
 	for field, fieldType := range rawFields {
 		for _, allowedType := range allowedTypes {
-			if strings.ToLower(string(fieldType)) == allowedType || strings.ToLower(string(fieldType)) == fmt.Sprintf("%s[]", allowedType) {
+			if strings.ToLower(string(fieldType)) == allowedType || strings.ToLower(string(fieldType)) == fmt.Sprintf("[]%s", allowedType) {
 				break
 			}
 			if !(strings.ToLower(string(fieldType)) == allowedType) && allowedType == "object" {
