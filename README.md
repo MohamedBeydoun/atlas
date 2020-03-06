@@ -48,6 +48,17 @@ Options:
 * --port, -p: the default port of the server
 * --db-url: the default mongodb url
 
+**atlas console**
+
+Loads the express application into a node console for easier debugging.
+
+```bash
+atlas console [options]
+```
+
+Options:
+* --db-url: the mongodb url to which the console will connect
+
 **atlas generate**
 
 Generates a new resrouce of specified type. Currently, we support:
@@ -59,7 +70,7 @@ Generates a new resrouce of specified type. Currently, we support:
 $ atlas generate <resource> [options]
 ```
 
-NOTE: All generate subcommands must be used in the new project's root directory. Also, preferably, resource names should be singular as the cli will change to plural as needed.
+NOTE: Preferably, resource names should be singular as the cli will change to plural as needed.
 
 **atlas generate model**
 
