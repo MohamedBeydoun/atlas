@@ -38,7 +38,7 @@ fields.`,
 func init() {
 	generateCmd.AddCommand(modelCmd)
 
-	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types (can be used repeatedly) e.g. name=string,friends=string[]")
+	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types (can be used repeatedly) e.g. name=string,friends=[]string")
 	modelCmd.MarkFlagRequired("fields")
 }
 
