@@ -10,7 +10,7 @@ fi
 
 # Parse commits
 for message in $(git log --pretty=format:'{%n "subject": "%s" %n},' | sed "$ s/,$//" | sed ':a;N;$!ba;s/\r\n\([^{]\)/\\n\1/g'| awk 'BEGIN { print("[") } { print($0) } END { print("]") }'| jq -c '.[].subject' | cut -d '"' -f 2 | cut -d '/' -f 1 | tac); do
-	if [ $message == "Bugfixes" ]; then
+	if [ $message == "Bugfixes" ] || [ $message == "Patches" ]; then
 		PATCH=$(($PATCH+1))
 	elif [ $message == "Features" ]; then
 		PATCH=0
