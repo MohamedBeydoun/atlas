@@ -10,15 +10,17 @@ Precompiled binaries can be found in the [releases](https://github.com/MohamedBe
 
 **Linux and macOS**
 ```bash
-chmod +x <downloaded_atlas_binary>
-sudo mv <downloaded_atlas_binary> /usr/local/bin/atlas
+tar -zxvf <binary>.tar.gz
+chmod +x <binary>
+sudo mv <binary> /usr/local/bin/atlas
 atlas
 ```
 
 **Windows**
 ```powershell
 #Open powershell as admin
-mv <path_to_downloaded_atlas_binary> C:\WINDOWS\system32\atlas.exe 
+tar -zxvf <binary>.tar.gz
+mv <binary> C:\WINDOWS\system32\atlas.exe 
 atlas
 ```
 
