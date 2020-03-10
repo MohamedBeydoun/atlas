@@ -18,7 +18,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
 
@@ -39,7 +38,7 @@ fields.`,
 func init() {
 	generateCmd.AddCommand(modelCmd)
 
-	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types (can be used repeatedly) e.g. name=string,friends=string[]")
+	modelCmd.Flags().StringToStringP("fields", "f", map[string]string{}, "Specify field names and types (can be used repeatedly) e.g. name=string,friends=[]string")
 	modelCmd.MarkFlagRequired("fields")
 }
 
@@ -51,10 +50,6 @@ func generateModel(cmd *cobra.Command, args []string) error {
 	}
 
 	name := strcase.ToLowerCamel(args[0])
-	wd, err := os.Getwd()
-	if err != nil {
-		return err
-	}
 	fields := make(map[string]string)
 	rawFields, err := cmd.Flags().GetStringToString("fields")
 	if err != nil {
@@ -72,7 +67,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
 	for field, fieldType := range rawFields {
 		for _, allowedType := range allowedTypes {
-			if strings.ToLower(string(fieldType)) == allowedType || strings.ToLower(string(fieldType)) == fmt.Sprintf("%s[]", allowedType) {
+			if strings.ToLower(string(fieldType)) == allowedType || strings.ToLower(string(fieldType)) == fmt.Sprintf("[]%s", allowedType) {
 				break
 			}
 			if !(strings.ToLower(string(fieldType)) == allowedType) && allowedType == "object" {
@@ -83,7 +78,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		fields[strcase.ToLowerCamel(field)] = strings.ToLower(fieldType)
 	}
 
-	model, err := generator.NewModel(name, fields, wd)
+	model, err := generator.NewModel(name, fields)
 	if err != nil {
 		return err
 	}

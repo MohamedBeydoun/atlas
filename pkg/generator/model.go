@@ -18,7 +18,7 @@ type Model struct {
 }
 
 // NewModel creates a new model struct
-func NewModel(name string, fields map[string]string, path string) (*Model, error) {
+func NewModel(name string, fields map[string]string) (*Model, error) {
 	project, err := prj.Current()
 	if err != nil {
 		return nil, err

@@ -84,7 +84,7 @@ Arguments:
 * name: name of the model
 
 Options:
-* --fields, -f: a list of fields with their respective types e.g. name=string,toys=srting\[\] (this flag can be used repeatedly instead of being comma separated e.g. -f name=string -f toys=string\[\])
+* --fields, -f: a list of fields with their respective types e.g. name=string,toys=\[\]srting (this flag can be used repeatedly instead of being comma separated e.g. -f name=string -f toys=\[\]string)
 
 **atlas generate router**
 

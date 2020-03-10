@@ -13,6 +13,7 @@ func GitignoreTemplate() []byte {
 .nyc_output
 dist/
 .console
+.atlas
 `)
 }
 
