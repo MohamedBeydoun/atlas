@@ -11,7 +11,6 @@ Precompiled binaries can be found in the [releases](https://github.com/MohamedBe
 **Linux and macOS**
 ```bash
 tar -zxvf <binary>.tar.gz
-chmod +x <binary>
 sudo mv <binary> /usr/local/bin/atlas
 atlas
 ```
@@ -22,6 +21,11 @@ atlas
 tar -zxvf <binary>.tar.gz
 mv <binary> C:\WINDOWS\system32\atlas.exe 
 atlas
+```
+
+### npm package
+```bash
+npm install -g atlas-generator
 ```
 
 ## Usage
