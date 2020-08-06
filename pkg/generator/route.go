@@ -6,6 +6,19 @@ import (
 	"strings"
 
 	"github.com/MohamedBeydoun/atlas/pkg/prj"
+	"github.com/kyokomi/emoji"
+	"github.com/logrusorgru/aurora"
+)
+
+var (
+	newControllerBlock = `
+    %s: async (req: Request, res: Response) => {
+        try {
+            res.status(statusCodes.NOT_IMPLEMENTED).send({ msg: "Not Implemented" });
+        } catch (err) {
+            res.status(statusCodes.INTERNAL_SERVER_ERROR).send(err);
+        }
+    },`
 )
 
 // Route holds the route information
@@ -17,7 +30,7 @@ type Route struct {
 	Project    *prj.Project
 }
 
-// NewRouter creates a new router struct
+// NewRoute creates a new route struct
 func NewRoute(router string, method string, url string, controller string) (*Route, error) {
 	project, err := prj.Current()
 	if err != nil {
@@ -33,19 +46,18 @@ func NewRoute(router string, method string, url string, controller string) (*Rou
 	}, nil
 }
 
-// Create generates the router files
+// Create generates the route files
 func (r *Route) Create() error {
-	fmt.Printf("Creating route for %s router\n", r.Router)
+	fmt.Printf(emoji.Sprintf(":gear:")+" Generating route for the "+aurora.Yellow("%s").String()+" router\n\n", r.Router)
 
 	// Update the router
-	fmt.Printf("    Updating src/routes/%s.ts\n", r.Router)
+	fmt.Printf("    "+aurora.Cyan("Updating ").String()+"src/routes/%s.ts\n", r.Router)
 	routerFile, err := ioutil.ReadFile(fmt.Sprintf("%s/src/routes/%s.ts", r.Project.AbsolutePath, r.Router))
 	if err != nil {
 		return err
 	}
 	routerFileLines := strings.Split(string(routerFile), "\n")
-	routerStr := fmt.Sprintf(`
-%sRouter.%s("%s", %sController.%s);`, r.Router, r.Method, r.URL, r.Router, r.Controller)
+	routerStr := fmt.Sprintf("\n%sRouter.%s(\"%s\", %sController.%s);", r.Router, r.Method, r.URL, r.Router, r.Controller)
 
 	linesToAdd := []string{routerStr}
 	for i, line := range routerFileLines {
@@ -63,20 +75,13 @@ func (r *Route) Create() error {
 	}
 
 	// Update the controller
-	fmt.Printf("    Updating src/controllers/%s.ts\n", r.Router)
+	fmt.Printf("    "+aurora.Cyan("Updating ").String()+"src/controllers/%s.ts\n", r.Router)
 	controllerFile, err := ioutil.ReadFile(fmt.Sprintf("%s/src/controllers/%s.ts", r.Project.AbsolutePath, r.Router))
 	if err != nil {
 		return err
 	}
 	controllerFileLines := strings.Split(string(controllerFile), "\n")
-	controllerStr := fmt.Sprintf(`
-    %s: async (req: Request, res: Response) => {
-        try {
-            res.status(statusCodes.NOT_IMPLEMENTED).send({ msg: "Not Implemented" });
-        } catch (err) {
-            res.status(statusCodes.INTERNAL_SERVER_ERROR).send(err);
-        }
-    },`, r.Controller)
+	controllerStr := fmt.Sprintf(newControllerBlock, r.Controller)
 
 	linesToAdd = []string{controllerStr}
 	for i, line := range controllerFileLines {
@@ -93,6 +98,6 @@ func (r *Route) Create() error {
 		return err
 	}
 
-	fmt.Println("Done")
+	fmt.Println("\n" + emoji.Sprintf(":party_popper:") + "Done")
 	return nil
 }

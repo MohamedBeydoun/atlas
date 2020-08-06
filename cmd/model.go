@@ -44,9 +44,9 @@ func init() {
 
 func generateModel(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return errors.New("Model name not provided\n")
+		return errors.New("model name not provided")
 	} else if len(args) > 1 {
-		return errors.New("Too many arguments\n")
+		return errors.New("too many arguments")
 	}
 
 	name := strcase.ToLowerCamel(args[0])
@@ -61,7 +61,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if !validName {
-		return errors.New("Invalid router name")
+		return errors.New("invalid router name")
 	}
 
 	allowedTypes := []string{"string", "boolean", "number", "symbol", "object"}
@@ -71,7 +71,7 @@ func generateModel(cmd *cobra.Command, args []string) error {
 				break
 			}
 			if !(strings.ToLower(string(fieldType)) == allowedType) && allowedType == "object" {
-				return errors.New(fmt.Sprintf("Unknown type: %s\n", string(fieldType)))
+				return fmt.Errorf("unknown type: %s", string(fieldType))
 			}
 		}
 

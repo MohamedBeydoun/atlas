@@ -26,7 +26,7 @@ import (
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
-	Use:   "create [flags] [arg]",
+	Use:   "create [flags] [name]",
 	Short: "Create creates a new express project.",
 	Long: `Create creates a new express project with given 
 configs. The new project will follow the appropriate structure for an 
@@ -43,9 +43,9 @@ func init() {
 
 func createProject(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return errors.New("Project name not provided\n")
+		return errors.New("project name not provided")
 	} else if len(args) > 1 {
-		return errors.New("Too many arguments\n")
+		return errors.New("too many arguments")
 	}
 
 	port, err := cmd.Flags().GetString("port")
@@ -61,12 +61,7 @@ func createProject(cmd *cobra.Command, args []string) error {
 		return errors.New(err.Error())
 	}
 
-	project := prj.Project{
-		Name:         args[0],
-		AbsolutePath: fmt.Sprintf("%v/%v", wd, args[0]),
-		Port:         port,
-		DBURL:        dbURL,
-	}
+	project := prj.NewProject(args[0], fmt.Sprintf("%v/%v", wd, args[0]), port, dbURL)
 
 	err = project.Create()
 	return err

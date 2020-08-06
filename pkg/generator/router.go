@@ -9,6 +9,8 @@ import (
 	"github.com/MohamedBeydoun/atlas/pkg/prj"
 	"github.com/MohamedBeydoun/atlas/pkg/tpl"
 	"github.com/MohamedBeydoun/atlas/pkg/util"
+	"github.com/kyokomi/emoji"
+	"github.com/logrusorgru/aurora"
 )
 
 // Router holds the router information
@@ -32,40 +34,40 @@ func NewRouter(name string) (*Router, error) {
 
 // Create generates the router files
 func (r *Router) Create() error {
-	fmt.Printf("Creating %s router\n", r.Name)
+	fmt.Printf(emoji.Sprintf(":gear:")+" Generating "+aurora.Yellow("%s").String()+" router\n\n", r.Name)
 
-	err := error(nil)
 	isNewRouter := true
+	overwriteRouter := true
+	overwriteController := true
+
+	// check if router exists and if user wants to overwrite it
 	if _, err := os.Stat(fmt.Sprintf("%s/src/routes/%s.ts", r.Project.AbsolutePath, r.Name)); err == nil {
-		proceed := util.AskForConfirmation(fmt.Sprintf("    src/routes/%s.ts already exists. Would you like to overwrite it?", r.Name))
+		overwriteRouter = util.AskForConfirmation(fmt.Sprintf(aurora.Yellow("    src/routes/%s.ts already exists. Would you like to overwrite it?").String(), r.Name))
 		isNewRouter = false
-		if !proceed {
-			goto createController
+	}
+	if overwriteRouter {
+		fmt.Print("    src/routes/")
+		err := util.CreateFile(r, r.Name+".ts", r.Project.AbsolutePath+"/src/routes", string(tpl.RouterTemplate()), 0)
+		if err != nil {
+			return err
 		}
 	}
-	fmt.Print("    src/routes/")
-	err = util.CreateFile(r, r.Name+".ts", r.Project.AbsolutePath+"/src/routes", string(tpl.RouterTemplate()), 0)
-	if err != nil {
-		return err
-	}
 
-createController:
+	// check if controller exists and if user wants to overwrite it
 	if _, err := os.Stat(fmt.Sprintf("%s/%s.ts", r.Project.AbsolutePath+"/src/controllers", r.Name)); err == nil {
-		proceed := util.AskForConfirmation(fmt.Sprintf("    src/controllers/%s.ts already exists. Would you like to overwrite it?", r.Name))
-		if !proceed {
-			fmt.Println("Done")
-			os.Exit(0)
+		overwriteController = util.AskForConfirmation(fmt.Sprintf(aurora.Yellow("    src/controllers/%s.ts already exists. Would you like to overwrite it?").String(), r.Name))
+	}
+	if overwriteController {
+		fmt.Print("    src/controllers/")
+		err := util.CreateFile(r, r.Name+".ts", r.Project.AbsolutePath+"/src/controllers", string(tpl.ControllerTemplate()), 0)
+		if err != nil {
+			return err
 		}
 	}
-	fmt.Print("    src/controllers/")
-	err = util.CreateFile(r, r.Name+".ts", r.Project.AbsolutePath+"/src/controllers", string(tpl.ControllerTemplate()), 0)
-	if err != nil {
-		return err
-	}
 
-	// Update the app if new router
+	// Update the app if it's a new router
 	if isNewRouter {
-		fmt.Printf("    Updating src/app.ts\n")
+		fmt.Printf("    " + aurora.Cyan("Updating ").String() + "src/app.ts\n")
 		appFile, err := ioutil.ReadFile(fmt.Sprintf("%s/src/app.ts", r.Project.AbsolutePath))
 		if err != nil {
 			return err
@@ -94,6 +96,7 @@ createController:
 		}
 	}
 
-	fmt.Println("Done")
+	fmt.Println("\n" + emoji.Sprintf(":party_popper:") + "Done")
+
 	return nil
 }

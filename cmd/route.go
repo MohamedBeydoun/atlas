@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -75,17 +74,17 @@ func generateRoute(cmd *cobra.Command, args []string) error {
 
 	// check if router exists
 	if _, err := os.Stat(fmt.Sprintf("%s/src/routes/%s.ts", wd, router)); os.IsNotExist(err) {
-		return errors.New(fmt.Sprintf("Router %s does not exist\n", router))
+		return fmt.Errorf("router %s does not exist", router)
 	}
 
 	// check if valid http method
-	expectedHttpMethods := []string{"get", "post", "put", "patch", "update", "delete"}
-	for _, expectedMethod := range expectedHttpMethods {
+	expectedHTTPMethods := []string{"get", "post", "put", "patch", "update", "delete"}
+	for _, expectedMethod := range expectedHTTPMethods {
 		if method == expectedMethod {
 			break
 		}
 		if method != expectedMethod && expectedMethod == "delete" {
-			return errors.New(fmt.Sprintf("Unknown HTTP method %s\n", method))
+			return fmt.Errorf("unknown HTTP method %s", method)
 		}
 	}
 
@@ -95,7 +94,7 @@ func generateRoute(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if string(url[0]) != "/" || !validURL {
-		return errors.New(fmt.Sprintf("Invalid route format: %s\n", url))
+		return fmt.Errorf("invalid route format: %s", url)
 	}
 
 	route, err := generator.NewRoute(router, method, url, controller)
