@@ -11,12 +11,20 @@ import (
 	"time"
 
 	"github.com/MohamedBeydoun/atlas/pkg/prj"
+	"github.com/kyokomi/emoji"
 
 	"github.com/MohamedBeydoun/atlas/pkg/tpl"
 	"github.com/MohamedBeydoun/atlas/pkg/util"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+)
+
+var (
+	dependencies = map[string]string{
+		"mongoose": "/node_modules/mongoose",
+		"express":  "/node_modules/express",
+	}
 )
 
 type consoleConfig struct {
@@ -26,7 +34,7 @@ type consoleConfig struct {
 
 // Run starts a development console
 func Run(dbURL string) error {
-	fmt.Println("Running console...")
+	fmt.Println(emoji.Sprintf(":red_circle:") + "Running console...\n")
 
 	project, err := prj.Current()
 	if err != nil {
@@ -42,18 +50,18 @@ func Run(dbURL string) error {
 
 	// check wd
 	if wd != project.AbsolutePath {
-		return errors.New("Console must be run in the project's root directory")
+		return errors.New("console must be run in the project's root directory")
 	}
 
 	// check deps
 	if _, err := os.Stat(project.AbsolutePath + "/node_modules"); os.IsNotExist(err) {
-		return errors.New("Must run \"npm install\" first")
+		return errors.New("must run \"npm install\" first")
 	}
-	if _, err := os.Stat(project.AbsolutePath + "/node_modules/mongoose"); os.IsNotExist(err) {
-		return errors.New("Missing package \"mongoose\"")
-	}
-	if _, err := os.Stat(project.AbsolutePath + "/node_modules/express"); os.IsNotExist(err) {
-		return errors.New("Missing package \"express\"")
+
+	for depName, relativePath := range dependencies {
+		if _, err := os.Stat(project.AbsolutePath + relativePath); os.IsNotExist(err) {
+			return fmt.Errorf("missing package \"%s\"", depName)
+		}
 	}
 
 	// check mongo
@@ -64,16 +72,18 @@ func Run(dbURL string) error {
 	defer cancelLong()
 	defer cancelShort()
 
+	fmt.Println(emoji.Sprintf(":floppy_disk:") + "Connecting to MongoDB...\n")
 	client, err := mongo.Connect(longCtx, options.Client().ApplyURI(strings.Join(mongoURI, "/")))
 	if err != nil {
-		return errors.New(fmt.Sprintf("Could not connect to mongo on %s", dbURL))
+		return fmt.Errorf("could not connect to mongo on %s", dbURL)
 	}
 	err = client.Ping(shortCtx, readpref.Primary())
 	if err != nil {
-		return errors.New(fmt.Sprintf("Could not connect to mongo on %s", dbURL))
+		return fmt.Errorf("could not connect to mongo on %s", dbURL)
 	}
 	client.Disconnect(shortCtx)
 
+	fmt.Println(emoji.Sprintf(":hammer:") + "Building project...\n")
 	err = exec.Command("npm", "run", "build").Run()
 	if err != nil {
 		return err
@@ -90,12 +100,13 @@ func Run(dbURL string) error {
 		return err
 	}
 
-	fmt.Print("Created ")
+	fmt.Print(emoji.Sprintf(":memo:") + "Created ")
 	err = util.CreateFile(consoleConfig{DBURL: dbURL, Models: models}, ".console", wd, string(tpl.ConsoleTemplate()), 0)
 	if err != nil {
 		return err
 	}
 
+	fmt.Println()
 	console := exec.Command("node", "--experimental-repl-await", wd+"/.console")
 	console.Stdout = os.Stdout
 	console.Stdin = os.Stdin

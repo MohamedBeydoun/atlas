@@ -7,6 +7,20 @@ import (
 
 	"github.com/MohamedBeydoun/atlas/pkg/tpl"
 	"github.com/MohamedBeydoun/atlas/pkg/util"
+	"github.com/kyokomi/emoji"
+	"github.com/logrusorgru/aurora"
+)
+
+var (
+	rootFolders = make([]folder, 2)
+	rootFiles   = map[string]string{
+		"package.json":  string(tpl.PackageJSONTemplate()),
+		"tslint.json":   string(tpl.TSLintTemplate()),
+		"tsconfig.json": string(tpl.TSConfigTemplate()),
+		"README.md":     string(tpl.ReadmeTemplate()),
+		".gitignore":    string(tpl.GitignoreTemplate()),
+		".atlas":        "",
+	}
 )
 
 // Project is the structure holding project information
@@ -17,12 +31,49 @@ type Project struct {
 	DBURL        string
 }
 
+type folder struct {
+	name       string
+	permission os.FileMode
+	path       string
+	level      int
+	populate   func() error
+}
+
+// NewProject initialized a new project's information
+func NewProject(name, path, port, dbURL string) *Project {
+	newProject := Project{
+		Name:         name,
+		AbsolutePath: path,
+		Port:         port,
+		DBURL:        dbURL,
+	}
+
+	rootFolders = []folder{
+		{
+			name:       "test",
+			permission: 0751,
+			level:      1,
+			path:       path,
+			populate:   newProject.populateTest,
+		},
+		{
+			name:       "src",
+			permission: 0751,
+			level:      1,
+			path:       path,
+			populate:   newProject.populateSrc,
+		},
+	}
+
+	return &newProject
+}
+
 // Create creates a new project directory with with a conventional express-typescript file structure
 func (p *Project) Create() error {
 	p.DBURL = strings.Replace(p.DBURL, "PROJECT_NAME", p.Name, -1)
 
 	if _, err := os.Stat(p.AbsolutePath); os.IsNotExist(err) {
-		fmt.Printf("Creating new application \"%v\" at %v\n", p.Name, p.AbsolutePath)
+		fmt.Printf(emoji.Sprint(":sparkles:")+"Creating project in"+aurora.Yellow(" %v\n\n").String(), p.AbsolutePath)
 		if err := os.Mkdir(p.AbsolutePath, 0754); err != nil {
 			return err
 		}
@@ -31,52 +82,29 @@ func (p *Project) Create() error {
 		os.Exit(0)
 	}
 
-	err := util.CreateFolders(p, []string{"test"}, p.AbsolutePath, 0751, false, 1)
-	if err != nil {
-		return err
-	}
-	err = p.populateTest()
-	if err != nil {
-		return err
+	fmt.Printf(emoji.Sprint(":rocket:") + "Invoking generators...\n\n")
+	for _, folder := range rootFolders {
+		err := util.CreateFolders(p, []string{folder.name}, folder.path, folder.permission, false, folder.level)
+		if err != nil {
+			return err
+		}
+
+		err = folder.populate()
+		if err != nil {
+			return err
+		}
 	}
 
-	err = util.CreateFolders(p, []string{"src"}, p.AbsolutePath, 0751, false, 1)
-	if err != nil {
-		return err
-	}
-	err = p.populateSrc()
-	if err != nil {
-		return err
+	for filename, template := range rootFiles {
+		err := util.CreateFile(p, filename, p.AbsolutePath, template, 1)
+		if err != nil {
+			return err
+		}
 	}
 
-	err = util.CreateFile(p, "package.json", p.AbsolutePath, string(tpl.PackageJSONTemplate()), 1)
-	if err != nil {
-		return err
-	}
-	err = util.CreateFile(p, "tslint.json", p.AbsolutePath, string(tpl.TSLintTemplate()), 1)
-	if err != nil {
-		return err
-	}
-	err = util.CreateFile(p, "tsconfig.json", p.AbsolutePath, string(tpl.TSConfigTemplate()), 1)
-	if err != nil {
-		return err
-	}
-	err = util.CreateFile(p, "README.md", p.AbsolutePath, string(tpl.ReadmeTemplate()), 1)
-	if err != nil {
-		return err
-	}
-	err = util.CreateFile(p, ".gitignore", p.AbsolutePath, string(tpl.GitignoreTemplate()), 1)
-	if err != nil {
-		return err
-	}
-	err = util.CreateFile(p, ".atlas", p.AbsolutePath, "", 1)
-	if err != nil {
-		return err
-	}
+	fmt.Printf("\n"+emoji.Sprint(":party_popper:")+"Successfully created project"+aurora.Yellow(" %v\n").String(), p.Name)
+	fmt.Printf("\n"+emoji.Sprint(":point_right:")+"Get started with the following commands:\n\n"+aurora.Cyan("    $ cd %s\n    $ npm install\n").String(), p.Name)
 
-	fmt.Println("Done")
-
-	fmt.Printf("\nRun the following commands:\n    cd %s\n    npm install\n", p.Name)
 	return nil
 }
 
@@ -116,7 +144,7 @@ func (p *Project) populateSrc() error {
 	return nil
 }
 
-// populateSrc populates the test directory with appropriate files and folders
+// populateTest populates the test directory with appropriate files and folders
 func (p *Project) populateTest() error {
 	testFolders := []string{"routes"}
 	err := util.CreateFolders(p, testFolders, p.AbsolutePath+"/test", 0751, false, 2)

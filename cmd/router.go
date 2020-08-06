@@ -38,9 +38,9 @@ func init() {
 
 func generateRouter(cmd *cobra.Command, args []string) error {
 	if len(args) == 0 {
-		return errors.New("Router name not provided\n")
+		return errors.New("router name not provided")
 	} else if len(args) > 1 {
-		return errors.New("Too many arguments\n")
+		return errors.New("too many arguments")
 	}
 
 	name := strcase.ToLowerCamel(args[0])
@@ -50,7 +50,7 @@ func generateRouter(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if !validName {
-		return errors.New("Invalid router name")
+		return errors.New("invalid router name")
 	}
 
 	router, err := generator.NewRouter(name)

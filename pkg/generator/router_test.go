@@ -11,9 +11,7 @@ import (
 
 func getTestRouter() *Router {
 	return &Router{
-		Name:         "test",
-		AbsolutePath: "/tmp/test/src/routes",
-		Routes:       map[string]string{"post": "/tests"},
+		Name: "test",
 		Project: &prj.Project{
 			Name:         "test",
 			AbsolutePath: "/tmp/test",
