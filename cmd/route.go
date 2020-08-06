@@ -29,8 +29,8 @@ import (
 // routeCmd represents the route command
 var routeCmd = &cobra.Command{
 	Use:   "route [flags]",
-	Short: "Route generates an express route.",
-	Long:  `Route generates a new express route with it's respective controller functions.`,
+	Short: "Generates an express route.",
+	Long:  `Generates a new express route with it's respective controller functions.`,
 	RunE:  generateRoute,
 }
 
