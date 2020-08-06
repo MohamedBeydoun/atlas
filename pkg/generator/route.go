@@ -99,5 +99,6 @@ func (r *Route) Create() error {
 	}
 
 	fmt.Println("\n" + emoji.Sprintf(":party_popper:") + "Done")
+
 	return nil
 }

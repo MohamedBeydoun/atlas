@@ -29,8 +29,8 @@ import (
 // modelCmd represents the model command
 var modelCmd = &cobra.Command{
 	Use:   "model [flags] [name]",
-	Short: "Model generates a mongodb model.",
-	Long: `Model generates a new mongodb model with the given
+	Short: "Model generates a MongoDB model.",
+	Long: `Model generates a new MongoDB model with the given
 fields.`,
 	RunE: generateModel,
 }
