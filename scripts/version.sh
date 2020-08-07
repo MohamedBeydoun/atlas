@@ -1,3 +1,5 @@
+#!/bin/bash
+
 MAJOR=0
 MINOR=0
 PATCH=0
@@ -10,11 +12,15 @@ fi
 
 # Parse commits
 for message in $(git log --pretty=format:'{%n "subject": "%s" %n},' | sed "$ s/,$//" | sed ':a;N;$!ba;s/\r\n\([^{]\)/\\n\1/g'| awk 'BEGIN { print("[") } { print($0) } END { print("]") }'| jq -c '.[].subject' | cut -d '"' -f 2 | cut -d '/' -f 1 | tac); do
-	if [ $message == "Bugfixes" ] || [ $message == "Patches" ]; then
+	if [ $message == "Bugfixes" ] || [ $message == "Patches" ] || [ $message == "Tests" ]; then
 		PATCH=$(($PATCH+1))
-	elif [ $message == "Features" ]; then
+	elif [ $message == "Features" ] || [ $message == "Enhancements" ] || [ $message == "Improvements" ]; then
 		PATCH=0
 		MINOR=$(($MINOR+1))
+	elif [ $message == "MAJOR" ]; then
+		PATCH=0
+		MINOR=0
+		MAJOR=$(($MAJOR+1))
 	fi
 done
 

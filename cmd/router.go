@@ -27,8 +27,8 @@ import (
 // routerCmd represents the router command
 var routerCmd = &cobra.Command{
 	Use:   "router [flags] [name]",
-	Short: "Router generates an express router.",
-	Long:  `Router generates a new express router with it's respective controller.`,
+	Short: "Generates an express router.",
+	Long:  `Generates a new express router with it's respective controller.`,
 	RunE:  generateRouter,
 }
 

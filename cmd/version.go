@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Mohamed Beydoun mohamed.beydoun@mail.mcgill.ca
+Copyright © 2020 Mohamed Beydoun
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,20 +16,22 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
-// generateCmd represents the generate command
-var generateCmd = &cobra.Command{
-	Use:   "generate [resource] [flags] [args]",
-	Short: "Creates a new resource.",
-	Long: `Creates the files required for a new resource.
-Possible resources:
-- router
-- route
-- model`,
+var version string
+
+// versionCmd represents the version command
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Prints out Atlas' version",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(version)
+	},
 }
 
 func init() {
-	rootCmd.AddCommand(generateCmd)
+	rootCmd.AddCommand(versionCmd)
 }
