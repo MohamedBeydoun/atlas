@@ -1,10 +1,9 @@
 name: Release
 
-# on:
-#   push:
-#     branches:
-#       - master
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 env:
   GITHUB_TOKEN: ${{ secrets.TOKEN }}
@@ -19,15 +18,19 @@ jobs:
         go-version: 1.13
 
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
       with:
         ref: master
+        fetch-depth: 0
 
     - name: Install dependencies
       run: |
         go mod vendor
-        git branch -a
 
-    # - name: Release
-    #   run: |
-    #     make release
+    - name: Release
+      run: |
+        git config --local user.email "mohamed.beydoun@mail.mcgill.ca"
+        git config --local user.name "Mohamed Beydoun"
+        curl -sfL https://install.goreleaser.com/github.com/goreleaser/goreleaser.sh | sh
+        sudo mv ./bin/goreleaser /usr/local/bin
+        make release
