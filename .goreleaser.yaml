@@ -7,4 +7,4 @@ builds:
     goarch:
       - amd64
     ldflags:
-      - -X cmd.version={{.Env.ATLAS_VERSION}}
+      - -s -w -X github.com/MohamedBeydoun/atlas/cmd.version={{.Env.ATLAS_VERSION}}
