@@ -117,6 +117,14 @@ Options:
 * --url, -u: the route's endpoint
 * --controller, -c: the name of the controller function associated with this route e.g. index, show, delete, etc
 
+**atlas version**
+
+Prints Atlas' version to the terminal
+
+```bash
+$ atlas version
+```
+
 ## License
 
 Apache License 2.0. see [LICENSE](https://github.com/MohamedBeydoun/atlas/blob/master/LICENSE)
