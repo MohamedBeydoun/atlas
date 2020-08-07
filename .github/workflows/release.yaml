@@ -1,10 +1,9 @@
 name: Release
 
-on: [push]
-# on:
-#   push:
-#     branches:
-#       - master
+on:
+  push:
+    branches:
+      - master
 
 env:
   GITHUB_TOKEN: ${{ secrets.TOKEN }}
@@ -27,5 +26,4 @@ jobs:
 
     - name: Release
       run: |
-        echo $GITHUB_TOKEN
-        make version
+        make release
