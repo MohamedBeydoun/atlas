@@ -1,10 +1,11 @@
 name: Release
 
-on:
-  push:
-    branches:
-      - master
-      - patches/github-actions
+on: [push]
+# on:
+#   push:
+#     branches:
+#       - master
+
 env:
   GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
@@ -26,4 +27,5 @@ jobs:
 
     - name: Release
       run: |
+        echo $GITHUB_TOKEN
         make version
