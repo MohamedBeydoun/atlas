@@ -1,9 +1,10 @@
 name: Release
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - master
+on: [push]
 
 env:
   GITHUB_TOKEN: ${{ secrets.TOKEN }}
@@ -19,11 +20,14 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v1
+      with:
+        ref: master
 
     - name: Install dependencies
       run: |
         go mod vendor
+        git branch -a
 
-    - name: Release
-      run: |
-        make release
+    # - name: Release
+    #   run: |
+    #     make release
